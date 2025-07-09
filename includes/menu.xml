@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Shared navigation menu for all your IGs -->
+<ul xmlns="http://www.w3.org/1999/xhtml">
+  <li><a href="index.html">Home</a></li>
+  <li><a href="profiles.html">Profiles</a></li>
+  <li><a href="extensions.html">Extensions</a></li>
+  <li><a href="artifacts.html">Artifacts</a></li>
+
+  <!-- A single-level submenu is OK; the IG Publisher supports one nested <ul> -->
+  <li>More
+    <ul>
+      <li><a href="toc.html">Table&nbsp;of&nbsp;Contents</a></li>
+      <li><a href="downloads.html">Downloads</a></li>
+      <li><a href="dependencies.html">Dependencies</a></li>
+    </ul>
+  </li>
+</ul>
