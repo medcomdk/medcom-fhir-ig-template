@@ -1,24 +1,24 @@
 ﻿{
-  "package-id": "hl7.dk.fhir.template",
-  "title": "Base template for FHIR IGs published by HL7 Denmark",
-  "canonical": "http://fhir.org/templates/hl7.dk.fhir.template",
-  "introduction": "This is the basic template for FHIR Guides published by HL7 Denmark",
+  "package-id": "medcom.dk.fhir.ig.template",
+  "title": "Base template for FHIR IGs published by MedCom",
+  "canonical": "http://fhir.org/templates/medcom.dk.fhir.ig.template",
+  "introduction": "This is the template for FHIR Guides published by MedCom",
   "list": [
     {
       "version": "current",
       "desc": "Continuous Integration Build (latest in version control)",
-      "path": "https://github.com/hl7dk/dk-ig-template",
+      "path": "https://github.com/medcomdk/medcom-fhir-ig-template",
       "status": "ci-build",
       "current": true
     },
     {
       "version": "0.0.1",
       "desc": "First release",
-      "path": "http://fhir.org/templates/hl7.dk.fhir.template/0.0.1",
+      "path": "http://fhir.org/templates/medcom.dk.fhir.template/0.0.1",
       "status": "release",
       "sequence": "Publications",
       "current": true,
-      "date": "2021-09-03"
+      "date": "2023-05-01"
     }
   ]
 }
