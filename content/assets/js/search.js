@@ -19,15 +19,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-
-
   if (fullSearch) {
     setupFullSearch(fullSearch);
   }
 });
 
 function setupQuickSearch(searchBox) {
-
 
   let searchTimeout;
   
@@ -100,12 +97,14 @@ function setupQuickSearch(searchBox) {
     resultBox.style.display = "block";
   }, 300);
 });
-
+}
 
 async function setupFullSearch(searchBox) {
   const filter = document.getElementById("search-type");
   let resultsContainer = document.getElementById("search-results");
   const status = document.getElementById("search-status");
+
+  let searchId = 0;
 
   if (!resultsContainer) {
     resultsContainer = document.createElement("div");
@@ -131,6 +130,7 @@ async function setupFullSearch(searchBox) {
 
 
   async function performSearch() {
+    const currentSearchId = ++searchId;
     const query = searchBox.value.toLowerCase().trim();
     const selectedFilter = filter ? filter.value : "all";
 
@@ -149,6 +149,9 @@ async function setupFullSearch(searchBox) {
 
     const results = await searchCurrentIG(query);
 
+    if (currentSearchId !== searchId) {
+  return;
+}
     const filteredResults = results.filter(result =>
       matchesFilter(result, selectedFilter)
     );
@@ -167,29 +170,24 @@ async function setupFullSearch(searchBox) {
 }
 
 async function searchCurrentIG(query) {
-  const pages = getPagesToSearch();
+  const pages = await getSearchablePages();
 
   const results = [];
 
-  for (const page of pages) {
-    try {
-      const response = await fetch(page.url);
+  const pagePromises = pages.map(async page => ({
+  page: page,
+  content: await fetchPage(page)
+}));
 
-      if (!response.ok) {
-        continue;
-      }
+const contents = await Promise.all(pagePromises);
 
-      const html = await response.text();
+for (const result of contents) {
+  const page = result.page;
+  const content = result.content;
 
-      const parser = new DOMParser();
-      const document = parser.parseFromString(html, "text/html");
-
-      const content = document.querySelector("#segment-content");
-
-      if (!content) {
-        continue;
-      }
-
+  if (!content) {
+    continue;
+  }
       const text = content.textContent
         .replace(/\s+/g, " ")
         .trim();
@@ -213,42 +211,33 @@ async function searchCurrentIG(query) {
         });
       }
 
-    } catch (error) {
-      console.warn("Could not search:", page.url, error);
     }
-  }
 
   return results;
 }
 
-function getPagesToSearch() {
-  return [
-    {
-      title: "Home",
-      url: "index.html",
+async function getSearchablePages() {
+  const response = await fetch("toc.html");
+  const html = await response.text();
+
+  const parser = new DOMParser();
+  const document = parser.parseFromString(html, "text/html");
+
+  const links = Array.from(
+    document.querySelectorAll("a[href]")
+  );
+
+  return links
+    .map(link => ({
+      title: link.textContent.trim(),
+      url: link.getAttribute("href"),
       type: "pages"
-    },
-    {
-      title: "Profiles",
-      url: "profiles.html",
-      type: "profiles"
-    },
-    {
-      title: "Extensions",
-      url: "extensions.html",
-      type: "extensions"
-    },
-    {
-      title: "Artifacts",
-      url: "artifacts.html",
-      type: "artifacts"
-    },
-    {
-      title: "Test Examples",
-      url: "testProtocolTestExample.html",
-      type: "examples"
-    }
-  ];
+    }))
+    .filter(page =>
+      page.url &&
+      page.url.endsWith(".html") &&
+      !page.url.startsWith("http")
+    );
 }
 
 function matchesFilter(result, filter) {
@@ -323,11 +312,29 @@ function renderResults(results, container) {
     container.appendChild(resultElement);
   });
 }
-}
 
-async function testFetch() {
-  const response = await fetch("profiles.html");
-  const html = await response.text();
+async function fetchPage(page) {
+  try {
+    const response = await fetch(page.url);
 
-  console.log(html);
+    if (!response.ok) {
+      return null;
+    }
+
+    const html = await response.text();
+
+    const parser = new DOMParser();
+    const document = parser.parseFromString(html, "text/html");
+
+    const content = document.querySelector("#segment-content");
+
+    if (!content) {
+      return null;
+    }
+
+    return content;
+  } catch (error) {
+    console.warn("Could not fetch:", page.url, error);
+    return null;
+  }
 }
