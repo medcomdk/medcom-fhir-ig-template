@@ -144,6 +144,7 @@ async function fetchPage(page) {
 
     content.querySelector(".releaseHeader")?.remove();
     content.querySelector(".nav-tabs")?.remove();
+    content.querySelector("#publish-box")?.remove();
 
     if (!content) {
       return null;
