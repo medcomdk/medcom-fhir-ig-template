@@ -1,7 +1,7 @@
 async function searchCurrentIG(query) {
   const pages = await getSearchablePages();
 
-  const results = [];
+  const results = new Map();
 
   const pagePromises = pages.map(async page => ({
   page: page,
@@ -41,19 +41,27 @@ for (const result of contents) {
 
       const lowerText = text.toLowerCase();
 
+      const matchCount = (lowerText.split(query).length - 1);
+
       if (lowerText.includes(query)) {
-        results.push({
+        results.set(page.url, {
           title: title,
           url: page.url,
           text: createSnippet(text, query),
           type: page.type,
-          path: path
+          path: path,
+          matchCount: matchCount,
+          score: calculateSearchScore({
+            title: title,
+            path: path,
+            text: text
+          }, query)
         });
       }
-
     }
 
-  return results;
+  return Array.from(results.values())
+  .sort((a, b) => b.score - a.score); ;
 }
 
 async function getSearchablePages() {
@@ -88,12 +96,19 @@ function matchesFilter(result, filter) {
   return result.type === filter;
 }
 
-function createSnippet(text, query) {
+  function createSnippet(text, query) {
   const lowerText = text.toLowerCase();
-  const index = lowerText.indexOf(query.toLowerCase());
+  const searchQuery = query.toLowerCase();
+
+  const firstIndex = lowerText.indexOf(searchQuery);
+
+  let index = lowerText.indexOf(
+    searchQuery,
+    firstIndex + searchQuery.length
+  );
 
   if (index === -1) {
-    return text.substring(0, 180) + "...";
+    index = firstIndex;
   }
 
   const start = Math.max(0, index - 80);
@@ -126,6 +141,9 @@ async function fetchPage(page) {
     const document = parser.parseFromString(html, "text/html");
 
     const content = document.querySelector("#segment-content");
+
+    content.querySelector(".releaseHeader")?.remove();
+    content.querySelector(".nav-tabs")?.remove();
 
     if (!content) {
       return null;
