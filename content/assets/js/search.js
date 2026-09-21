@@ -215,6 +215,23 @@ function renderResults(results, container) {
 
     title.appendChild(link);
 
+    const typeBadge = document.createElement("span");
+
+typeBadge.className =
+  "search-result-type type-" + result.type;
+
+const typeNames = {
+  profiles: "Profile",
+  extensions: "Extension",
+  examples: "Example",
+  pages: "Documentation"
+};
+
+typeBadge.textContent =
+  typeNames[result.type] || "Documentation";
+
+title.appendChild(typeBadge);
+
     const path =
   document.createElement("small");
 

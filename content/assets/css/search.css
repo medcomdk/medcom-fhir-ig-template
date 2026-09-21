@@ -96,6 +96,11 @@
     border-color 0.15s ease;
 }
 
+.filter-chip input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
 .filter-chip:hover {
   background: #f5faff;
   border-color: #70b9d5;
@@ -318,6 +323,40 @@
   padding: 0 !important;
 }
 
+
+/* Result type badges */
+
+.search-result-type {
+  display: inline-block;
+
+  margin: 5px 0 4px;
+  padding: 4px 9px;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  border-radius: 4px;
+}
+
+.search-result-type.type-profiles {
+  color: #1769aa;
+  background: #e7f3fb;
+}
+
+.search-result-type.type-extensions {
+  color: #7a4f00;
+  background: #fff3d6;
+}
+
+.search-result-type.type-examples {
+  color: #347342;
+  background: #e8f6e9;
+}
+
+.search-result-type.type-pages {
+  color: #40566b;
+  background: #edf1f4;
+}
 
 /* ---------------------------------------------------------
    Mobile
