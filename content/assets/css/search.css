@@ -1,53 +1,249 @@
-
-#search-box {
-  float: right;
-  margin-top: 5px;
-  margin-right: 6px;
-}
-
-#quick-search-results {
-  text-align: left;
-}
+/* =========================================================
+   Search
+   ========================================================= */
 
 #search-page {
-  max-width: 900px;
-  margin: 0 auto;
+  max-width: 100%;
+}
+
+/* Search input */
+
+.search-page-input {
+  margin: 15px 0 20px;
 }
 
 #full-search-box {
   width: 100%;
-  padding: 10px;
-  font-size: 16px;
+  box-sizing: border-box;
+  padding: 9px 12px;
+
+  font-family: inherit;
+  font-size: 15px;
+
+  color: #333;
+  background: #fff;
+
   border: 1px solid #ccc;
   border-radius: 3px;
+
+  transition: border-color 0.15s ease,
+              box-shadow 0.15s ease;
 }
+
+#full-search-box:focus {
+  outline: none;
+  border-color: #0072a8;
+  box-shadow: 0 0 0 2px rgba(0, 114, 168, 0.1);
+}
+
+/* ---------------------------------------------------------
+   Filters
+   --------------------------------------------------------- */
+
+.search-filter {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+
+  margin-bottom: 15px;
+  padding: 8px 0;
+
+  border-bottom: 1px solid #ddd;
+}
+
+.search-filter strong {
+  margin-right: 8px;
+  font-weight: 600;
+}
+
+.search-filter label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  padding: 4px 8px;
+
+  font-size: 14px;
+  color: #444;
+
+  border-radius: 3px;
+
+  cursor: pointer;
+}
+
+.search-filter label:hover {
+  background: #f2f2f2;
+}
+
+.search-filter input {
+  margin: 0;
+}
+
+/* ---------------------------------------------------------
+   Sort / status
+   --------------------------------------------------------- */
 
 .search-filters {
-  margin-top: 15px;
-  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-bottom: 10px;
 }
 
-.search-filters select {
-  margin-left: 8px;
-  padding: 6px;
+#search-sort {
+  padding: 5px 8px;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background: #fff;
 }
 
 #search-status {
-  margin-bottom: 15px;
+  margin: 12px 0;
+
+  font-size: 13px;
   color: #666;
 }
 
-.search-result {
+/* ---------------------------------------------------------
+   Results
+   --------------------------------------------------------- */
+
+#search-results h3 {
+  margin-top: 25px;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+
+  font-size: 18px;
+  font-weight: 600;
+
   border-bottom: 1px solid #ddd;
-  padding: 15px 0;
 }
 
-.search-result h4 {
-  margin-top: 0;
+.search-result {
+  margin-bottom: 14px;
+  padding: 10px 0 12px;
+
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.search-result:last-child {
+  border-bottom: none;
+}
+
+.search-result-title {
+  margin-bottom: 3px;
+
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.search-result-title a {
+  color: #006c9c;
+  text-decoration: none;
+}
+
+.search-result-title a:hover {
+  text-decoration: underline;
+}
+
+.search-result small {
+  display: block;
+
   margin-bottom: 5px;
+
+  font-size: 12px;
+  color: #777;
 }
 
 .search-result p {
   margin: 0;
-  color: #555;
+
+  font-size: 14px;
+  line-height: 1.45;
+  color: #444;
+}
+
+/* ---------------------------------------------------------
+   Quick search
+   --------------------------------------------------------- */
+
+#search-box {
+  float: right;
+
+  width: 190px;
+  box-sizing: border-box;
+
+  margin-top: 0;
+  margin-right: 6px;
+
+  padding: 6px 9px;
+
+  font-family: inherit;
+  font-size: 13px;
+
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+#search-box:focus {
+  outline: none;
+  border-color: #0072a8;
+}
+
+/* Quick search results */
+
+#quick-search-results {
+  min-width: 280px;
+  max-width: 360px;
+
+  padding: 5px !important;
+
+  background: #fff;
+
+  border: 1px solid #ccc !important;
+  border-radius: 3px;
+
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12) !important;
+}
+
+#quick-search-results a {
+  display: block;
+
+  padding: 7px 8px;
+
+  color: #006c9c;
+  text-decoration: none;
+}
+
+#quick-search-results a:hover {
+  background: #f3f3f3;
+}
+
+#quick-search-results > div {
+  padding: 0 !important;
+}
+
+/* ---------------------------------------------------------
+   Mobile
+   --------------------------------------------------------- */
+
+@media (max-width: 700px) {
+
+  .search-filter {
+    align-items: flex-start;
+  }
+
+  #search-box {
+    width: 150px;
+  }
+
+  .search-result {
+    padding: 9px 0;
+  }
 }

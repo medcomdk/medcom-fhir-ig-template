@@ -100,7 +100,11 @@ function setupQuickSearch(searchBox) {
 }
 
 async function setupFullSearch(searchBox) {
-  const filter = document.getElementById("search-type");
+
+  const filters = document.querySelectorAll(
+  '.search-filter input[type="checkbox"]'
+);
+
   let resultsContainer = document.getElementById("search-results");
   const status = document.getElementById("search-status");
   const sort = document.getElementById("search-sort");
@@ -122,9 +126,10 @@ async function setupFullSearch(searchBox) {
 
   searchBox.addEventListener("input", performSearch);
 
-  if (filter) {
-    filter.addEventListener("change", performSearch);
-  }
+filters.forEach(filter => {
+  filter.addEventListener("change", performSearch);
+});
+
   if (sort) {
     sort.addEventListener("change", performSearch);
   }
@@ -136,7 +141,9 @@ async function setupFullSearch(searchBox) {
   async function performSearch() {
     const currentSearchId = ++searchId;
     const query = searchBox.value.toLowerCase().trim();
-    const selectedFilter = filter ? filter.value : "all";
+    const selectedFilters = Array.from(filters)
+      .filter(filter => filter.checked)
+      .map(filter => filter.value);
     const selectedSort = sort ? sort.value : "relevance";
 
     resultsContainer.innerHTML = "";
@@ -157,9 +164,9 @@ async function setupFullSearch(searchBox) {
     if (currentSearchId !== searchId) {
   return;
 }
-    const filteredResults = results.filter(result =>
-      matchesFilter(result, selectedFilter)
-    );
+   const filteredResults = results.filter(result =>
+  matchesFilter(result, selectedFilters)
+);
 
     const sortedResults = sortResults(filteredResults, selectedSort);
 
@@ -195,7 +202,9 @@ function renderResults(results, container) {
       "search-result";
 
     const title =
-      document.createElement("h4");
+      document.createElement("div");
+      title.className = "search-result-title";
+
 
     const link =
       document.createElement("a");

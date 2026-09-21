@@ -20,6 +20,7 @@ for (const result of contents) {
 
   const content = pageContent.content;
   const breadcrumb = pageContent.breadcrumb;
+  const description = pageContent.description;
 
   const path = breadcrumb 
     ? Array.from(breadcrumb.querySelectorAll("li"))
@@ -39,6 +40,17 @@ for (const result of contents) {
           ? titleElement.textContent.trim()
           : page.title;
 
+      const headingStyle = Array.from(document.querySelectorAll("style"))
+  .find(style => style.textContent.includes("--heading-prefix"));
+
+const sectionPrefix =
+  headingStyle?.textContent.match(/--heading-prefix:"([^"]+)"/)?.[1] || "";
+
+const sectionNumber =
+  sectionPrefix && titleElement
+    ? sectionPrefix + "1"
+    : "";
+
       const lowerText = text.toLowerCase();
 
       const matchCount = (lowerText.split(query).length - 1);
@@ -46,8 +58,11 @@ for (const result of contents) {
       if (lowerText.includes(query)) {
         results.set(page.url, {
           title: title,
+          sectionNumber : sectionNumber,
           url: page.url,
-          text: createSnippet(text, query),
+          text: description
+            ? description.textContent.trim()
+            : createSnippet(text, query),
           type: page.type,
           path: path,
           matchCount: matchCount,
@@ -78,7 +93,10 @@ async function getLinksFromPage(pageUrl) {
 
 
 async function getSearchablePages() {
+  const artifactTypes = await getArtifactTypes();
   const response = await fetch("toc.html");
+
+
   const html = await response.text();
 
   const parser = new DOMParser();
@@ -89,11 +107,15 @@ async function getSearchablePages() {
   );
 
   return links
-    .map(link => ({
+  .map(link => {
+    const url = link.getAttribute("href");
+
+    return {
       title: link.textContent.trim(),
-      url: link.getAttribute("href"),
-      type: "pages"
-    }))
+      url: url,
+      type: artifactTypes.get(url) || "pages"
+    };
+  })
     .filter(page =>
       page.url &&
       page.url.endsWith(".html") &&
@@ -101,30 +123,14 @@ async function getSearchablePages() {
     );
 }
 
-function getPageType(url) {
-  if (url.startsWith("StructureDefinition-")) {
-    return "profiles";
-  }
 
-  if (url.startsWith("StructureMap-")) {
-    return "extensions";
-  }
-
-  if (url.startsWith("Bundle-")) {
-    return "examples";
-  }
-
-  return "pages";
-}
-
-
-
-function matchesFilter(result, filter) {
-  if (filter === "all") {
+function matchesFilter(result, selectedFilters) {
+  // Ingen filtre valgt = All
+  if (selectedFilters.length === 0) {
     return true;
   }
 
-  return result.type === filter;
+  return selectedFilters.includes(result.type);
 }
 
   function createSnippet(text, query) {
@@ -177,6 +183,9 @@ async function fetchPage(page) {
       return null;
     }
 
+    const description = Array.from(content.querySelectorAll("p"))
+  .find(p => p.textContent.includes("This profile is intended"));
+
     content.querySelector(".releaseHeader")?.remove();
     content.querySelector(".nav-tabs")?.remove();
     content.querySelector("#publish-box")?.remove();
@@ -186,7 +195,8 @@ async function fetchPage(page) {
 
     return {
         content: content,
-        breadcrumb: breadcrumb
+        breadcrumb: breadcrumb,
+        description: description 
     };
 
   } catch (error) {
