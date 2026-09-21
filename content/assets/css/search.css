@@ -2,134 +2,206 @@
    Search
    ========================================================= */
 
+/* ---------------------------------------------------------
+   Full search page
+   --------------------------------------------------------- */
+
 #search-page {
-  max-width: 100%;
+  width: 100%;
 }
 
 /* Search input */
 
 .search-page-input {
-  margin: 15px 0 20px;
+  margin: 14px 0 18px;
 }
 
 #full-search-box {
   width: 100%;
   box-sizing: border-box;
+
   padding: 9px 12px;
 
   font-family: inherit;
   font-size: 15px;
-
   color: #333;
+
   background: #fff;
+  border: 1px solid #bbb;
+  border-radius: 2px;
 
-  border: 1px solid #ccc;
-  border-radius: 3px;
-
-  transition: border-color 0.15s ease,
-              box-shadow 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 #full-search-box:focus {
   outline: none;
-  border-color: #0072a8;
-  box-shadow: 0 0 0 2px rgba(0, 114, 168, 0.1);
+  border-color: #006c9c;
+  box-shadow: 0 0 0 2px rgba(0, 108, 156, 0.12);
 }
 
 /* ---------------------------------------------------------
-   Filters
-   --------------------------------------------------------- */
-
-.search-filter {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 6px;
-
-  margin-bottom: 15px;
-  padding: 8px 0;
-
-  border-bottom: 1px solid #ddd;
-}
-
-.search-filter strong {
-  margin-right: 8px;
-  font-weight: 600;
-}
-
-.search-filter label {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-
-  padding: 4px 8px;
-
-  font-size: 14px;
-  color: #444;
-
-  border-radius: 3px;
-
-  cursor: pointer;
-}
-
-.search-filter label:hover {
-  background: #f2f2f2;
-}
-
-.search-filter input {
-  margin: 0;
-}
-
-/* ---------------------------------------------------------
-   Sort / status
+   Filters / sorting controls
    --------------------------------------------------------- */
 
 .search-filters {
   display: flex;
   align-items: center;
+  gap: 24px;
+
+  margin: 0 0 14px;
+  padding: 6px 0;
+
+  border-bottom: 1px solid #ddd;
+}
+
+.search-filter {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
 
-  margin-bottom: 10px;
+  margin: 0;
+  padding: 0;
+}
+
+.search-filter strong {
+  margin-right: 4px;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Filter chips */
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 7px 12px;
+
+  font-size: 14px;
+  color: #333;
+
+  background: #fff;
+  border: 1px solid #d5d5d5;
+  border-radius: 5px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.filter-chip:hover {
+  background: #f5faff;
+  border-color: #70b9d5;
+}
+
+.filter-chip input {
+  appearance: none;
+
+  width: 16px;
+  height: 16px;
+
+  margin: 0;
+
+  background: #fff;
+  border: 1px solid #aaa;
+  border-radius: 3px;
+
+  cursor: pointer;
+}
+
+.filter-chip input:checked {
+  position: relative;
+
+  background: #0072a8;
+  border-color: #0072a8;
+}
+
+.filter-chip input:checked::after {
+  content: "✓";
+
+  position: absolute;
+  left: 2px;
+  top: -1px;
+
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.filter-chip:has(input:checked) {
+  color: #006c9c;
+  background: #eef8fc;
+  border-color: #70b9d5;
+  font-weight: 600;
+}
+
+/* Sort */
+
+.search-filters > label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  margin: 0;
+
+  font-size: 14px;
+  font-weight: 600;
 }
 
 #search-sort {
-  padding: 5px 8px;
+  margin: 0;
+  padding: 4px 7px;
 
   font-family: inherit;
   font-size: 14px;
+  line-height: 1.2;
 
-  border: 1px solid #ccc;
-  border-radius: 3px;
+  color: #333;
   background: #fff;
+
+  border: 1px solid #bbb;
+  border-radius: 2px;
 }
 
+
+/* ---------------------------------------------------------
+   Search status
+   --------------------------------------------------------- */
+
 #search-status {
-  margin: 12px 0;
+  margin: 12px 0 14px;
 
   font-size: 13px;
   color: #666;
 }
 
+
 /* ---------------------------------------------------------
-   Results
+   Search results
    --------------------------------------------------------- */
 
-#search-results h3 {
-  margin-top: 25px;
-  margin-bottom: 10px;
+.search-results-heading {
+  margin: 20px 0 10px;
   padding-bottom: 6px;
 
   font-size: 18px;
   font-weight: 600;
 
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #ccc;
 }
 
 .search-result {
-  margin-bottom: 14px;
-  padding: 10px 0 12px;
+  margin: 0;
+  padding: 12px 0;
 
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e2e2e2;
 }
 
 .search-result:last-child {
@@ -169,34 +241,51 @@
   color: #444;
 }
 
+
 /* ---------------------------------------------------------
-   Quick search
+   Quick search in navbar
    --------------------------------------------------------- */
 
 #search-box {
-  float: right;
+  float: none;
+  display: inline-block;
 
   width: 190px;
+  height: 30px;
   box-sizing: border-box;
 
-  margin-top: 0;
-  margin-right: 6px;
-
-  padding: 6px 9px;
+  margin: 5px 5px 0 10px;
+  padding: 5px 10px;
 
   font-family: inherit;
   font-size: 13px;
+  color: #333;
 
-  border: 1px solid #ccc;
+  background: #fff;
+  border: 1px solid #b8b8b8;
   border-radius: 3px;
+
+  vertical-align: middle;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+#search-box::placeholder {
+  color: #777;
 }
 
 #search-box:focus {
   outline: none;
-  border-color: #0072a8;
+  border-color: #006c9c;
+  box-shadow: 0 0 0 2px rgba(0, 108, 156, 0.12);
 }
 
-/* Quick search results */
+
+/* ---------------------------------------------------------
+   Quick search results
+   --------------------------------------------------------- */
 
 #quick-search-results {
   min-width: 280px;
@@ -206,10 +295,10 @@
 
   background: #fff;
 
-  border: 1px solid #ccc !important;
+  border: 1px solid #bbb !important;
   border-radius: 3px;
 
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15) !important;
 }
 
 #quick-search-results a {
@@ -222,12 +311,13 @@
 }
 
 #quick-search-results a:hover {
-  background: #f3f3f3;
+  background: #f2f2f2;
 }
 
 #quick-search-results > div {
   padding: 0 !important;
 }
+
 
 /* ---------------------------------------------------------
    Mobile
@@ -235,8 +325,13 @@
 
 @media (max-width: 700px) {
 
-  .search-filter {
+  .search-filters {
     align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .search-filters > label {
+    margin-left: 0;
   }
 
   #search-box {
@@ -244,6 +339,6 @@
   }
 
   .search-result {
-    padding: 9px 0;
+    padding: 10px 0;
   }
 }

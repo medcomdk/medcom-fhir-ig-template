@@ -12,11 +12,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const currentPage =
       window.location.pathname.split("/").pop() || "index.html";
 
-    if (currentPage !== "index.html") {
-      quickSearch.style.display = "none";
-    } else {
-      setupQuickSearch(quickSearch);
-    }
+    if (currentPage === "search.html") {
+  quickSearch.style.display = "none";
+} else {
+  setupQuickSearch(quickSearch);
+}
   }
 
   if (fullSearch) {
@@ -190,7 +190,8 @@ function renderResults(results, container) {
     return;
   }
 
-  const heading = document.createElement("h3");
+  const heading = document.createElement("div");
+  heading.className = "search-results-heading";
   heading.textContent = "This IG";
   container.appendChild(heading);
 
