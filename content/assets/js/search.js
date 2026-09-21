@@ -103,6 +103,7 @@ async function setupFullSearch(searchBox) {
   const filter = document.getElementById("search-type");
   let resultsContainer = document.getElementById("search-results");
   const status = document.getElementById("search-status");
+  const sort = document.getElementById("search-sort");
 
   let searchId = 0;
 
@@ -120,10 +121,13 @@ async function setupFullSearch(searchBox) {
   }
 
   searchBox.addEventListener("input", performSearch);
+
   if (filter) {
     filter.addEventListener("change", performSearch);
   }
-
+  if (sort) {
+    sort.addEventListener("change", performSearch);
+  }
   if (initialQuery) {
     await performSearch();
   }
@@ -133,6 +137,7 @@ async function setupFullSearch(searchBox) {
     const currentSearchId = ++searchId;
     const query = searchBox.value.toLowerCase().trim();
     const selectedFilter = filter ? filter.value : "all";
+    const selectedSort = sort ? sort.value : "relevance";
 
     resultsContainer.innerHTML = "";
     if (status) {
@@ -156,6 +161,8 @@ async function setupFullSearch(searchBox) {
       matchesFilter(result, selectedFilter)
     );
 
+    const sortedResults = sortResults(filteredResults, selectedSort);
+
     if (status) {
       status.textContent =
         filteredResults.length +
@@ -163,12 +170,11 @@ async function setupFullSearch(searchBox) {
     }
 
     renderResults(
-      filteredResults,
+      sortedResults,
       resultsContainer
     );
   }
 }
-
 
 function renderResults(results, container) {
   if (results.length === 0) {

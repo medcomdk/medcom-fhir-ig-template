@@ -64,6 +64,19 @@ for (const result of contents) {
   .sort((a, b) => b.score - a.score); ;
 }
 
+async function getLinksFromPage(pageUrl) {
+    const response = await fetch(pageUrl);
+    const html = await response.text();
+
+    const parser = new DOMParser();
+    const document = parser.parseFromString(html, "text/html");
+
+    return Array.from(
+      document.querySelectorAll("#segment-content a[href]")
+    ).map(link => link.getAttribute("href"));
+}
+
+
 async function getSearchablePages() {
   const response = await fetch("toc.html");
   const html = await response.text();
@@ -87,6 +100,24 @@ async function getSearchablePages() {
       !page.url.startsWith("http")
     );
 }
+
+function getPageType(url) {
+  if (url.startsWith("StructureDefinition-")) {
+    return "profiles";
+  }
+
+  if (url.startsWith("StructureMap-")) {
+    return "extensions";
+  }
+
+  if (url.startsWith("Bundle-")) {
+    return "examples";
+  }
+
+  return "pages";
+}
+
+
 
 function matchesFilter(result, filter) {
   if (filter === "all") {
@@ -142,13 +173,14 @@ async function fetchPage(page) {
 
     const content = document.querySelector("#segment-content");
 
+     if (!content) {
+      return null;
+    }
+
     content.querySelector(".releaseHeader")?.remove();
     content.querySelector(".nav-tabs")?.remove();
     content.querySelector("#publish-box")?.remove();
 
-    if (!content) {
-      return null;
-    }
 
     const breadcrumb = document.querySelector("#segment-breadcrumb .breadcrumb");
 
@@ -162,3 +194,7 @@ async function fetchPage(page) {
     return null;
   }
 }
+
+getLinksFromPage("profiles.html").then(links => {
+  console.log(links);
+});
