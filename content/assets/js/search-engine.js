@@ -1,82 +1,13 @@
 async function searchCurrentIG(query) {
-  const pages = await getSearchablePages();
+  const response = await fetch(
+    "http://localhost:3000/search?q=" + encodeURIComponent(query)
+  );
 
-  const results = new Map();
-
-  const pagePromises = pages.map(async page => ({
-  page: page,
-  content: await fetchPage(page)
-}));
-
-const contents = await Promise.all(pagePromises);
-
-for (const result of contents) {
-  const page = result.page;
-  const pageContent = result.content;
-
-  if (!pageContent) {
-    continue;
+  if (!response.ok) {
+    return [];
   }
 
-  const content = pageContent.content;
-  const breadcrumb = pageContent.breadcrumb;
-  const description = pageContent.description;
-
-  const path = breadcrumb 
-    ? Array.from(breadcrumb.querySelectorAll("li"))
-        .map(li => li.textContent.trim())
-        .join(" > ")
-    : "";
-
-      const text = content.textContent
-        .replace(/\s+/g, " ")
-        .trim();
-
-      const titleElement =
-        content.querySelector("h1, h2");
-
-      const title =
-        titleElement
-          ? titleElement.textContent.trim()
-          : page.title;
-
-      const headingStyle = Array.from(document.querySelectorAll("style"))
-  .find(style => style.textContent.includes("--heading-prefix"));
-
-const sectionPrefix =
-  headingStyle?.textContent.match(/--heading-prefix:"([^"]+)"/)?.[1] || "";
-
-const sectionNumber =
-  sectionPrefix && titleElement
-    ? sectionPrefix + "1"
-    : "";
-
-      const lowerText = text.toLowerCase();
-
-      const matchCount = (lowerText.split(query).length - 1);
-
-      if (lowerText.includes(query)) {
-        results.set(page.url, {
-          title: title,
-          sectionNumber : sectionNumber,
-          url: page.url,
-          text: description
-            ? description.textContent.trim()
-            : createSnippet(text, query),
-          type: page.type,
-          path: path,
-          matchCount: matchCount,
-          score: calculateSearchScore({
-            title: title,
-            path: path,
-            text: text
-          }, query)
-        });
-      }
-    }
-
-  return Array.from(results.values())
-  .sort((a, b) => b.score - a.score); ;
+  return await response.json();
 }
 
 async function getLinksFromPage(pageUrl) {

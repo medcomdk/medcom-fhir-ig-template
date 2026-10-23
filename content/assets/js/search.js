@@ -202,6 +202,12 @@ function renderResults(results, container) {
     resultElement.className =
       "search-result";
 
+    const breadcrumb =
+    document.createElement("small");
+    breadcrumb.className = "search-result-breadcrumb";
+    breadcrumb.textContent = (result.breadcrumb || []).join(" > ");
+    resultElement.appendChild(breadcrumb);
+
     const title =
       document.createElement("div");
       title.className = "search-result-title";
@@ -212,8 +218,6 @@ function renderResults(results, container) {
 
     link.href = result.url;
     link.textContent = result.title;
-
-    title.appendChild(link);
 
     const typeBadge = document.createElement("span");
 
@@ -230,17 +234,19 @@ const typeNames = {
 typeBadge.textContent =
   typeNames[result.type] || "Documentation";
 
-title.appendChild(typeBadge);
+    title.appendChild(typeBadge);
+    title.appendChild(link);
 
     const path =
   document.createElement("small");
 
+path.className = "search-result-path";
 path.textContent = result.path;
 
     const snippet =
       document.createElement("p");
 
-    snippet.textContent = result.text;
+    snippet.textContent = result.text.substring(0, 300);
 
     resultElement.appendChild(title);
     resultElement.appendChild(path);
