@@ -1,0 +1,7 @@
+{% comment %}
+Publisher versions can prepend their output directory to data image URLs.
+Repair those URLs before the browser sees them, retaining the hierarchy graphics.
+{% endcomment %}
+{% capture medcom_dependencies %}{% include dependency-table.xhtml %}{% endcapture %}
+{% assign medcom_image_parts = medcom_dependencies | split: 'url(' %}
+{{ medcom_image_parts | first }}{% for medcom_part in medcom_image_parts offset:1 %}{% assign medcom_image_url = medcom_part | split: ')' | first %}url({% if medcom_image_url contains 'data:image/' %}{% assign medcom_invalid_prefix = medcom_image_url | split: 'data:image/' | first %}{% if medcom_invalid_prefix == '"' or medcom_invalid_prefix == "'" %}{{ medcom_part }}{% else %}{{ medcom_part | remove_first: medcom_invalid_prefix }}{% endif %}{% else %}{{ medcom_part }}{% endif %}{% endfor %}

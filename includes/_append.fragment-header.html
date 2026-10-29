@@ -1,3 +1,6 @@
+        <span id="medcom-page-top" class="medcom-top-anchor" tabindex="-1"> </span>
+        <a class="medcom-skip-link" href="#segment-content">Skip to content</a>
+        <div class="medcom-brand">
         <div id="hl7-nav">
           <a id="hl7-logo" no-external="true" href="https://www.medcom.dk">
             <img height="50" alt="Visit MedComs website" src="{{site.data.info.assets}}assets/images/dark-medcom-logo.png"/>
@@ -5,4 +8,10 @@
         </div>
         <div id="family-nav">
           <a id="family-logo" no-external="true" href="http://hl7.org/fhir"><img height="50" alt="Visit the FHIR website" src="{{site.data.info.assets}}assets/images/fhir-logo-www.png"/> </a>
-        </div>        
+        </div>
+        </div>
+        <form class="medcom-search" role="search" aria-label="Search across all MedCom IGs" action="{{site.data.info.assets}}searchform.html" method="get">
+          <label class="sr-only" for="medcom-search-query">Search across all MedCom IGs</label>
+          <input id="medcom-search-query" name="q" type="search" placeholder="Search across all MedCom IGs" required="required"/>
+          <button type="submit">Search</button>
+        </form>

@@ -1,0 +1,4 @@
+{
+  "script": "scripts/medcom.xml",
+  "otherScripts": ["scripts/ant.xml"]
+}

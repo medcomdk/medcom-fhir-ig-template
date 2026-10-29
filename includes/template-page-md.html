@@ -1,0 +1,21 @@
+{% comment %}
+Original: https://github.com/HL7/ig-template-base/blob/master/includes/template-page-md.html
+The shared page-navigation script builds the contents panel from rendered headings.
+{% endcomment %}
+{% include fragment-pagebegin.html %}
+<div class="col-12">
+  <!--ReleaseHeader--><p id="publish-box">Publish Box goes here</p><!--EndReleaseHeader-->
+  {% if page.path == 'index.html' %}
+  {% include fragment-igTable.html %}
+  {% endif %}
+  {% include fragment-pageTable.html %}
+  {% assign path = page.path | split: '.html' %}
+{% capture page-content %}
+<div>
+<!-- Preserve block boundaries when the included Markdown starts with inline HTML. -->
+</div>
+{% include {{path}}.md %}
+{% endcapture %}
+  {{page-content | markdownify}}
+</div>
+{% include fragment-pageend.html %}

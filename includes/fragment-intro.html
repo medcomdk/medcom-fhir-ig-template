@@ -1,0 +1,15 @@
+{% assign intro = site.data.pages[page.path].intro %}
+{% if intro != null %}
+{% if site.data.pages[page.path].intro-type == 'xml' %}
+<div class="medcom-intro">
+{% include {{intro}} type=include.type id=include.id %}
+</div>
+{% else %}
+{% capture intro-content %}
+{% include {{intro}} type=include.type id=include.id %}
+{% endcapture %}
+<div class="medcom-intro" markdown="1">
+{{ intro-content | markdownify }}
+</div>
+{% endif %}
+{% endif %}

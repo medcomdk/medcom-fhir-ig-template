@@ -1,0 +1,18 @@
+---
+---
+{% include fragment-pagebegin.html %}
+<div class="col-12">
+  <!--ReleaseHeader--><p id="publish-box">Publish Box goes here</p><!--EndReleaseHeader-->
+  <h2>Profiles</h2>
+  {% assign medcom_has_definitions = false %}
+  {% for medcom_definition in site.data.structuredefinitions %}
+    {% if medcom_definition[1].derivation == 'constraint' and medcom_definition[1].type != 'Extension' %}{% assign medcom_has_definitions = true %}{% endif %}
+  {% endfor %}
+  {% if medcom_has_definitions %}
+  <p>The following profiles are defined in {{site.data.fhir.ig.title | escape_once}}.</p>
+  <div class="medcom-artifact-overview">{% include list-profiles.xhtml %}</div>
+  {% else %}
+  <p>No profiles are defined in this implementation guide.</p>
+  {% endif %}
+</div>
+{% include fragment-pageend.html %}

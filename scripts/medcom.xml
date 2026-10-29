@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="MedComTemplate">
+  <import file="ant.xml"/>
+  <target name="medcom.overviewPages" extensionOf="onLoad.extend" depends="onLoad.updateIg">
+    <xslt in="${onLoad.ig.dest}xml" out="${ig.template}/medcom-pages.xml" style="${ig.scripts}/medcom-pages.xslt"/>
+    <copy file="${ig.template}/medcom-pages.xml" tofile="${onLoad.ig.dest}xml" overwrite="true"/>
+  </target>
+</project>

@@ -1,2 +1,13 @@
-<a style="color: #81BEF7" target="_blank" href="https://www.was.digst.dk/medcomfhir-dk-ig-">Accessibility statement
-  (Tilgængelighedserklæring)</a>
+
+| <a class="medcom-history-link" href="{{site.data.info.assets}}history.html">History of published versions</a>
+| <a target="_blank" href="https://www.was.digst.dk/medcomfhir-dk-ig-">Accessibility statement (Tilgængelighedserklæring)</a>
+<a class="medcom-back-to-top medcom-footer-top" hidden="hidden" href="#medcom-page-top">To the top <span aria-hidden="true">↑</span></a>
+
+{% assign medcom_tour_profile = '' %}
+{% for medcom_definition in site.data.structuredefinitions %}
+  {% if medcom_definition[1].kind == 'resource' and medcom_definition[1].derivation == 'constraint' and medcom_definition[1].type != 'Extension' %}
+    {% assign medcom_tour_profile = medcom_definition[1].path %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+<button type="button" class="medcom-tour-launch" data-medcom-start-tour="true" data-tour-home="{{site.data.info.assets}}index.html" data-tour-profile="{{medcom_tour_profile | escape}}">Guide tour</button>

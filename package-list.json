@@ -7,7 +7,7 @@
     {
       "version": "current",
       "desc": "Continuous Integration Build (latest in version control)",
-      "path": "https://github.com/medcomdk/medcom-ig-template",
+      "path": "https://github.com/medcomdk/medcom-fhir-ig-template",
       "status": "ci-build",
       "current": true
     }
