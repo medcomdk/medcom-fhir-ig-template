@@ -77,7 +77,7 @@ dialog.medcom-tour::backdrop { background: transparent; }
 @media print { .medcom-tour-launch, .medcom-tour-start, dialog.medcom-tour, .medcom-tour-spacer { display: none !important; } }
 
 .medcom-tour-active #segment-navbar { visibility: hidden; }
-#segment-navbar .medcom-menu-current, .medcom-tour-navbar .medcom-menu-current, .medcom-tour-dropdown .medcom-menu-current { color: var(--medcom-green) !important; background: var(--medcom-tint) !important; }
+.medcom-tour-navbar .medcom-menu-current, .medcom-tour-dropdown .medcom-menu-current { color: var(--medcom-green) !important; background: var(--medcom-tint) !important; }
 .medcom-tour-navbar { position: fixed; inset: 0 0 auto; z-index: 2; background: #fff; border-bottom: 1px solid var(--medcom-border); box-shadow: 0 .15rem .5rem #00263826; }
 .medcom-tour-navbar > .container { padding: 0; }
 .medcom-tour-navbar .navbar { margin: 0; }

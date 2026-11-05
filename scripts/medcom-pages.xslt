@@ -5,8 +5,16 @@
     <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
   </xsl:template>
   <xsl:template match="f:ImplementationGuide/f:definition/f:page">
+    <xsl:variable name="home" select="f:page[f:nameUrl/@value='index.html' or f:name/@value='index.html'][1]"/>
     <xsl:copy>
-      <xsl:apply-templates select="@*|node()"/>
+      <xsl:choose>
+        <!-- SUSHI supplies a ToC root. Promote Home and retain the other pages. -->
+        <xsl:when test="(f:nameUrl/@value='toc.html' or f:name/@value='toc.html') and $home">
+          <xsl:apply-templates select="$home/@*|$home/node()"/>
+          <xsl:apply-templates select="f:page[not(f:nameUrl/@value='index.html' or f:name/@value='index.html')]"/>
+        </xsl:when>
+        <xsl:otherwise><xsl:apply-templates select="@*|node()"/></xsl:otherwise>
+      </xsl:choose>
       <xsl:call-template name="overview"><xsl:with-param name="name" select="'downloads'"/><xsl:with-param name="title" select="'Downloads'"/></xsl:call-template>
       <xsl:call-template name="overview"><xsl:with-param name="name" select="'profiles'"/><xsl:with-param name="title" select="'Profiles'"/></xsl:call-template>
       <xsl:call-template name="overview"><xsl:with-param name="name" select="'extensions'"/><xsl:with-param name="title" select="'Extensions'"/></xsl:call-template>

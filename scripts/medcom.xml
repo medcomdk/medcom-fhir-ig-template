@@ -5,4 +5,16 @@
     <xslt in="${onLoad.ig.dest}xml" out="${ig.template}/medcom-pages.xml" style="${ig.scripts}/medcom-pages.xslt"/>
     <copy file="${ig.template}/medcom-pages.xml" tofile="${onLoad.ig.dest}xml" overwrite="true"/>
   </target>
+  <target name="medcom.removeBreadcrumbs" extensionOf="onLoad.extend">
+    <replaceregexp file="${ig.template}/includes/fragment-pagebegin.html"
+      match="(?s)    &lt;div id=&quot;segment-breadcrumb&quot;.*?&lt;!-- /segment-breadcrumb --&gt;"
+      replace=""/>
+  </target>
+  <!-- Retain the base grouping pipeline while using our final page transform. -->
+  <target name="onGenerate.processIg">
+    <xslt in="${onGenerate.ig.source}xml" out="${onGenerate.ig.source}1.xml" style="${ig.scripts}/onGenerate.group.xslt"/>
+    <replace file="${onGenerate.ig.source}1.xml" token="&lt;!--TEMPLATE_GROUPS_HERE--&gt;" value="${groupings}"/>
+    <xslt in="${onGenerate.ig.source}1.xml" out="${onGenerate.ig.source}2.xml" style="${ig.scripts}/onGenerate.groupSort.xslt"/>
+    <xslt in="${onGenerate.ig.source}2.xml" out="${onGenerate.ig.dest}xml" style="${ig.scripts}/medcom-final.xslt"/>
+  </target>
 </project>

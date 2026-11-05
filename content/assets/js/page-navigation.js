@@ -24,7 +24,7 @@
     var sections = [];
     content.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (heading) {
       // Repeated headings in alternative resource views are not document sections.
-      if (heading === title || heading.closest("table, pre, blockquote, .modal, #tabs, [role='tabpanel']")) return;
+      if (heading === title || heading.closest("[hidden], table, pre, blockquote, .modal, #tabs, [role='tabpanel']")) return;
       var text = headingText(heading);
       if (!text) return;
       var level = Number(heading.tagName.slice(1));
@@ -222,6 +222,33 @@
     update();
   }
 
+  function markMenuLocation() {
+    var nav = document.getElementById("segment-navbar");
+    if (!nav) return;
+    var links = Array.from(nav.querySelectorAll("a[href]"));
+    var currentURL = new URL(window.location.href);
+    if (currentURL.pathname.endsWith("/")) currentURL = new URL("index.html", currentURL);
+    function linkFor(links, page) {
+      var url = new URL(page, window.location.href);
+      return links.find(function (link) {
+        return !link.getAttribute("href").endsWith("#") && link.origin === url.origin && link.pathname === url.pathname;
+      });
+    }
+    var link = linkFor(links, currentURL.href);
+    if (!link) {
+      var heading = document.querySelector(".medcom-page-title");
+      var text = heading ? heading.textContent : "";
+      if (/StructureDefinition-/.test(currentURL.pathname)) link = linkFor(links, /Extension:/.test(text) ? "extensions.html" : "profiles.html");
+      else if (/(CodeSystem|ValueSet|ConceptMap)-/.test(currentURL.pathname)) link = linkFor(links, "terminology.html") || linkFor(links, "artifacts.html");
+    }
+    if (link) {
+      link.classList.add("medcom-menu-current");
+      link.setAttribute("aria-current", link.pathname === currentURL.pathname ? "page" : "location");
+      var parent = link.closest(".dropdown");
+      if (parent) parent.querySelector("a").classList.add("medcom-menu-current");
+    }
+  }
+
   function initialize() {
     var main = document.getElementById("segment-content");
     if (!main) return;
@@ -258,6 +285,7 @@
       });
       if (!excluded) addContents(content, sections, title);
     });
+    markMenuLocation();
     function updateTopLinks() {
       document.querySelectorAll(".medcom-back-to-top").forEach(function (link) { link.hidden = window.scrollY <= 0; });
     }

@@ -27,26 +27,6 @@
       });
     }
     function label(link) { return link.textContent.trim().replace(/\s+/g, " "); }
-    function markLocation(nav) {
-      var links = Array.from(nav.querySelectorAll("a[href]"));
-      var currentURL = new URL(window.location.href);
-      if (currentURL.pathname.endsWith("/")) currentURL = new URL("index.html", currentURL);
-      var link = linkFor(links, currentURL.href);
-      if (!link) {
-        var heading = document.querySelector(".medcom-page-title");
-        var text = heading ? heading.textContent : "";
-        if (/StructureDefinition-/.test(currentURL.pathname)) link = linkFor(links, /Extension:/.test(text) ? "extensions.html" : "profiles.html");
-        else if (/(CodeSystem|ValueSet|ConceptMap)-/.test(currentURL.pathname)) link = linkFor(links, "terminology.html") || linkFor(links, "artifacts.html");
-      }
-      if (link) {
-        link.classList.add("medcom-menu-current");
-        link.setAttribute("aria-current", link.pathname === currentURL.pathname ? "page" : "location");
-        var parent = link.closest(".dropdown");
-        if (parent) parent.querySelector("a").classList.add("medcom-menu-current");
-      }
-    }
-    markLocation(sourceNav);
-
     // The modal owns a copy of the actual menu, so it stays visible and its
     // highlighted link can be activated without making the background interactive.
     var nav = sourceNav.cloneNode(true);

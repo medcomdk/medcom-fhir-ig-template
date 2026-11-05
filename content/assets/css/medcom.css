@@ -134,8 +134,13 @@ a:focus-visible, summary:focus-visible, button:focus-visible {
 .navbar-inverse .navbar-toggle { border-color: var(--medcom-border); }
 .navbar-inverse .navbar-toggle .icon-bar { background: var(--medcom-ink); }
 .navbar-inverse .navbar-toggle:hover, .navbar-inverse .navbar-toggle:focus { background: var(--medcom-tint); }
-#segment-breadcrumb .breadcrumb { padding: 1rem 0; margin: 0; font-size: .78rem; background: transparent; }
-#segment-breadcrumb .breadcrumb > li { font-family: inherit; font-size: inherit; }
+#segment-navbar .medcom-menu-current { color: var(--medcom-green) !important; background: var(--medcom-tint) !important; }
+#segment-content { padding-top: 1.25rem; }
+#segment-content .medcom-governance-rules td { padding: .85rem 1rem; border-bottom: 1px solid var(--medcom-border); vertical-align: top; }
+#segment-content .medcom-governance-rules th:first-child,
+#segment-content .medcom-governance-rules td:first-child { min-width: 5rem; white-space: nowrap; }
+#segment-content .medcom-governance-rules tbody tr:nth-child(even) { background: var(--medcom-surface); }
+#segment-content .medcom-governance-rules a[id]:target { outline: 2px solid var(--medcom-green); outline-offset: .3rem; }
 #segment-content .row { margin: 0; }
 #segment-content .inner-wrapper { margin: 0 0 3rem; }
 #segment-content .col-12 {
@@ -255,9 +260,9 @@ a:focus-visible, summary:focus-visible, button:focus-visible {
 .medcom-contents-links ol { margin: 0; padding: 0; list-style: none; }
 .medcom-contents-links ol ol { padding-left: .7rem; }
 #segment-content .medcom-contents-links li { margin: 0; font-family: inherit; }
-.medcom-contents-links a { display: block; padding: .45rem .65rem; border-radius: .35rem; color: var(--medcom-muted); font-size: .875rem; line-height: 1.6; text-decoration: none; overflow-wrap: anywhere; }
+.medcom-contents-links a { display: block; padding: .45rem .65rem; border-radius: .35rem; color: var(--medcom-muted); font-size: .875rem; font-weight: 400; line-height: 1.6; text-decoration: none; overflow-wrap: anywhere; }
 .medcom-contents-links a:hover { background: #fff; color: var(--medcom-green); }
-.medcom-contents-links a[aria-current] { background: var(--medcom-tint); color: #185b26; font-weight: 600; }
+.medcom-contents-links a[aria-current] { background: var(--medcom-tint); color: #185b26; }
 .medcom-top-anchor { position: absolute; top: 0; left: 0; }
 .medcom-back-to-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; width: fit-content; padding: .55rem .85rem; border: 1px solid var(--medcom-border); border-radius: .4rem; background: #fff; color: var(--medcom-green); font-size: .875rem; font-weight: 500; line-height: 1.5; text-decoration: none; }
 .medcom-back-to-top:hover { border-color: var(--medcom-green); background: var(--medcom-tint); color: #185b26; text-decoration: none; }
