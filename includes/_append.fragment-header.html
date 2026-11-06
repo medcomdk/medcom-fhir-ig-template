@@ -10,8 +10,11 @@
           <a id="family-logo" no-external="true" href="http://hl7.org/fhir"><img height="50" alt="Visit the FHIR website" src="{{site.data.info.assets}}assets/images/fhir-logo-www.png"/> </a>
         </div>
         </div>
-        <form class="medcom-search" role="search" aria-label="Search across all MedCom IGs" action="{{site.data.info.assets}}searchform.html" method="get">
-          <label class="sr-only" for="medcom-search-query">Search across all MedCom IGs</label>
-          <input id="medcom-search-query" name="q" type="search" placeholder="Search across all MedCom IGs" required="required"/>
+        {% include medcom-search-config.html %}
+        {% assign medcom_search_label = 'Search across all MedCom IGs' %}
+        {% if medcom_local_search %}{% assign medcom_search_label = 'Search this IG' %}{% endif %}
+        <form class="medcom-search" role="search" aria-label="{{medcom_search_label}}" action="{{site.data.info.assets}}searchform.html" method="get">
+          <label class="sr-only" for="medcom-search-query">{{medcom_search_label}}</label>
+          <input id="medcom-search-query" name="q" type="search" placeholder="{{medcom_search_label}}" required="required" maxlength="200"/>
           <button type="submit">Search</button>
         </form>

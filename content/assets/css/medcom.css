@@ -131,6 +131,13 @@ a:focus-visible, summary:focus-visible, button:focus-visible {
 .navbar .dropdown-menu { border: 1px solid var(--medcom-border); border-radius: .5rem; padding: .4rem; }
 .dropdown-menu > li > a { padding: .5rem .75rem; border-radius: .3rem; color: var(--medcom-ink); }
 .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus { background: var(--medcom-tint); color: var(--medcom-green); }
+.medcom-profiles-menu > .dropdown-menu { max-height: 70vh; overflow-y: auto; }
+.medcom-profiles-menu > .dropdown-menu > li > a { white-space: normal; overflow-wrap: anywhere; min-width: 16rem; }
+.medcom-search-results { padding-left: 1.5rem; }
+.medcom-search-results > li { padding: .75rem 0; border-bottom: 1px solid var(--medcom-border); }
+.medcom-search-results h2 { margin: 0 0 .35rem; font-size: 1.15rem; }
+.medcom-search-results p { margin: 0; }
+.medcom-search-results mark { background: #fff1a8; color: var(--medcom-ink); }
 .navbar-inverse .navbar-toggle { border-color: var(--medcom-border); }
 .navbar-inverse .navbar-toggle .icon-bar { background: var(--medcom-ink); }
 .navbar-inverse .navbar-toggle:hover, .navbar-inverse .navbar-toggle:focus { background: var(--medcom-tint); }

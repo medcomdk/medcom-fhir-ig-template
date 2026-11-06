@@ -235,6 +235,13 @@
       });
     }
     var link = linkFor(links, currentURL.href);
+    if (!link && /StructureDefinition-/.test(currentURL.pathname)) {
+      // Definitions, examples, mappings, and source tabs belong to the profile's main page.
+      var profilePath = currentURL.pathname.replace(/(?:-(?:definitions|mappings|examples|testing)|\.profile\.(?:xml|json|ttl|history))\.html$/, ".html");
+      link = links.find(function (candidate) {
+        return candidate.closest(".medcom-profiles-menu") && candidate.origin === currentURL.origin && candidate.pathname === profilePath;
+      });
+    }
     if (!link) {
       var heading = document.querySelector(".medcom-page-title");
       var text = heading ? heading.textContent : "";

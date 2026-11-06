@@ -1,15 +1,17 @@
 ---
 ---
+{% include medcom-search-config.html %}
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
   <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Search under development - {{site.data.fhir.ig.title | escape_once}}</title>
+    <title>Search - {{site.data.fhir.ig.title | escape_once}}</title>
     <link href="{{site.data.info.assets}}fhir.css" rel="stylesheet"/>
     <link href="{{site.data.info.assets}}assets/css/bootstrap-fhir.css" rel="stylesheet"/>
     <link href="{{site.data.info.assets}}assets/css/project.css" rel="stylesheet"/>
     {% include fragment-css.html %}
+    {% if medcom_local_search %}<script src="{{site.data.info.assets}}assets/js/ig-search.js" defer="defer"> </script>{% endif %}
   </head>
   <body>
     <div id="segment-header" class="segment">
@@ -33,7 +35,7 @@
               <span class="icon-bar"> </span><span class="icon-bar"> </span><span class="icon-bar"> </span>
             </button>
             <div class="nav-collapse collapse navbar-inverse-collapse">
-              {% include menu.xml %}
+              {% include medcom-menu.xml %}
             </div>
           </div>
         </nav>
@@ -44,8 +46,18 @@
         <div class="row">
           <div class="inner-wrapper">
             <div class="col-12">
+              {% if medcom_local_search %}
+              <h1>Search this IG</h1>
+              <p>Search guidance, profiles, extensions, and examples in this implementation guide. Results apply only to the IG version you are viewing.</p>
+              <div id="medcom-local-search" data-index="{{site.data.info.assets}}search-index.json">
+                <p id="medcom-search-status" role="status" aria-live="polite">Enter a search term in the search box above.</p>
+                <ol id="medcom-search-results" class="medcom-search-results"></ol>
+              </div>
+              <p id="medcom-search-help">Enable JavaScript to search this guide, or use the navigation menu to browse it.</p>
+              {% else %}
               <h1>Search under development</h1>
               <p>Searching this implementation guide is under development.</p>
               <p>Use the navigation menu or return to <a href="{{site.data.info.assets}}index.html">Home</a> to browse this guide.</p>
+              {% endif %}
             </div>
     {% include fragment-pageend.html %}

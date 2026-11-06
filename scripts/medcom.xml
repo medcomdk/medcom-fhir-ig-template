@@ -10,6 +10,22 @@
       match="(?s)    &lt;div id=&quot;segment-breadcrumb&quot;.*?&lt;!-- /segment-breadcrumb --&gt;"
       replace=""/>
   </target>
+  <target name="medcom.profileMenuLayout" extensionOf="onLoad.extend">
+    <replace file="${ig.template}/includes/fragment-pagebegin.html" token="{% include menu.xml %}" value="{% include medcom-menu.xml %}"/>
+  </target>
+  <target name="medcom.profileMenu" extensionOf="onGenerate.extend" depends="onGenerate.processIncludes">
+    <condition property="medcom.menu.source" value="${ig.root}/input/includes/menu.xml" else="${ig.root}/fsh-generated/includes/menu.xml">
+      <available file="${ig.root}/input/includes/menu.xml"/>
+    </condition>
+    <xslt in="${medcom.menu.source}" out="${dir.temp.includes}/medcom-menu.xml" style="${ig.scripts}/medcom-menu.xslt"/>
+  </target>
+  <target name="medcom.searchFiles" extensionOf="onGenerate.extend" depends="onGenerate.processIncludes">
+    <pathconvert property="medcom.search.files" pathsep="|">
+      <fileset dir="${ig.root}" includes="input/pagecontent/*.md,input/pagecontent/*.xml,input/pages/*.md,input/pages/*.xml"/>
+      <flattenmapper/>
+    </pathconvert>
+    <echo file="${dir.temp.includes}/medcom-search-files.txt" message="${medcom.search.files}"/>
+  </target>
   <!-- Retain the base grouping pipeline while using our final page transform. -->
   <target name="onGenerate.processIg">
     <xslt in="${onGenerate.ig.source}xml" out="${onGenerate.ig.source}1.xml" style="${ig.scripts}/onGenerate.group.xslt"/>

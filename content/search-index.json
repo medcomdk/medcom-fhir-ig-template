@@ -1,0 +1,44 @@
+---
+layout: null
+---
+{%- include medcom-search-config.html -%}
+[
+{%- if medcom_local_search -%}
+  {%- assign medcom_separator = '' -%}
+  {%- comment -%}Reuse the Publisher's Markdown includes so guidance is indexed without site chrome.{%- endcomment -%}
+  {%- capture medcom_files -%}{% include medcom-search-files.txt %}{%- endcapture -%}
+  {%- assign medcom_files = medcom_files | strip | split: '|' -%}
+  {%- for medcom_file in medcom_files -%}
+    {%- assign medcom_document_base = medcom_file | remove: '.md' | remove: '.xml' -%}
+    {%- assign medcom_document_url = medcom_document_base | append: '.html' -%}
+    {%- assign medcom_metadata = site.data.pages[medcom_document_url] -%}
+    {%- if medcom_metadata -%}
+      {%- capture medcom_text -%}{% include {{medcom_file}} %}{%- endcapture -%}
+      {{medcom_separator}}{"url":{{medcom_document_url | jsonify}},"title":{{medcom_metadata.title | default: medcom_document_base | jsonify}},"text":{{medcom_text | markdownify | replace: '</', ' </' | strip_html | normalize_whitespace | jsonify}}}
+      {%- assign medcom_separator = ',' -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- comment -%}One entry per local resource; include prose, narrative, and profile element definitions. Alternate XML/JSON/tab views would duplicate these results.{%- endcomment -%}
+  {%- for medcom_entry in site.data.resources -%}
+    {%- assign medcom_resource = medcom_entry[1] -%}
+    {%- assign medcom_parts = medcom_entry[0] | split: '/' -%}
+    {%- assign medcom_type = medcom_parts[0] -%}
+    {%- assign medcom_id = medcom_parts[1] -%}
+    {%- assign medcom_metadata = site.data.pages[medcom_resource.path] -%}
+    {%- if medcom_type != 'ImplementationGuide' and medcom_resource.path and medcom_metadata -%}
+      {%- capture medcom_text -%}
+        {{medcom_resource.name}} {{medcom_resource.description | markdownify}} {{medcom_resource.purpose | markdownify}}
+        {% if medcom_metadata.intro %}{% capture medcom_intro %}{% include {{medcom_metadata.intro}} type=medcom_type id=medcom_id %}{% endcapture %}{{medcom_intro | markdownify}}{% endif %}
+        {% if medcom_metadata.notes %}{% capture medcom_notes %}{% include {{medcom_metadata.notes}} type=medcom_type id=medcom_id %}{% endcapture %}{{medcom_notes | markdownify}}{% endif %}
+        {% if medcom_type == 'StructureDefinition' %}
+          {% include StructureDefinition-{{medcom_id}}-dict-active.xhtml %}
+        {% else %}
+          {% include {{medcom_type}}-{{medcom_id}}-html.xhtml %}
+        {% endif %}
+      {%- endcapture -%}
+      {{medcom_separator}}{"url":{{medcom_resource.path | jsonify}},"title":{{medcom_metadata.title | default: medcom_resource.title | default: medcom_resource.name | jsonify}},"text":{{medcom_text | replace: '</', ' </' | strip_html | normalize_whitespace | jsonify}}}
+      {%- assign medcom_separator = ',' -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+]

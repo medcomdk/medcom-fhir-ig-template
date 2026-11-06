@@ -54,14 +54,16 @@
     ].forEach(function (item) {
       if (menuLinks.some(function (link) { return label(link) === item[1]; })) steps.push({id: item[0], menuLabel: item[1], title: item[1], text: item[2]});
     });
-    if (linkFor(menuLinks, "profiles.html")) {
+    if (profile && nav.querySelector(".medcom-profiles-menu")) {
+      menuStep("profiles-menu", profile.href, "Choose a profile", "Open the Profiles dropdown to select a profile directly. Each profile defines requirements for a FHIR resource or data type. Next, we will open one example profile to see how these rules are presented.", "Open example profile");
+    } else if (linkFor(menuLinks, "profiles.html")) {
       menuStep("profiles-menu", "profiles.html", "Find Profiles", "You can find a list of profiles here. Each profile defines requirements for a particular FHIR resource or data type.", "Open Profiles");
       steps.push({id: "profiles", page: "profiles.html", target: ".medcom-artifact-overview, #segment-content .col-12", title: "Profiles in this guide", text: profile ? "A FHIR profile is a reusable, machine-readable set of rules for a resource such as Patient: required fields, allowed repetitions, codes, and references. A MedCom EDI, CDA, or XML standard specification typically describes a complete message or document. An IG brings profiles together with workflow and exchange rules to specify the complete standard. Next, we will choose one example profile to see how these rules are presented.": "A FHIR profile is a reusable, machine-readable set of rules for a resource such as Patient: required fields, allowed repetitions, codes, and references. A MedCom EDI, CDA, or XML standard specification typically describes a complete message or document. An IG brings profiles together with workflow and exchange rules to specify the complete standard. This page lists the profiles defined here.", next: profile ? "Open example profile" : "Next"});
-      if (profile) steps.push(
-        {id: "profile", page: profile.href, target: ".col-12 > .nav-tabs, .medcom-page-title", title: "One example profile", text: "We have chosen one example from this guide's Profiles list. These tabs provide its rules, detailed element definitions, mappings, examples, and XML/JSON definitions."},
+    }
+    if (profile && (nav.querySelector(".medcom-profiles-menu") || linkFor(menuLinks, "profiles.html"))) steps.push(
+        {id: "profile", page: profile.href, target: ".col-12 > .nav-tabs, .medcom-page-title", title: "One example profile", text: "We have chosen one example from this guide's Profiles menu. These tabs provide its rules, detailed element definitions, mappings, examples, and XML/JSON definitions."},
         {id: "profile-tables", page: profile.href, target: "#tabs, #segment-content .col-12", title: "Compare the example's table views", text: "'Key Elements Table' contains elements that have 'Flags' or 'Cardinality'; This is just an overview. The 'Differential Table' shows changes from the base/inherited definition; Snapshot includes all elements including inherited and is the most important view here."}
       );
-    }
     if (linkFor(menuLinks, "extensions.html")) {
       menuStep("extensions-menu", "extensions.html", "Find Extensions", "Extensions lists the additional data structures defined in this guide. Click the highlighted menu item or choose Open Extensions to see them.", "Open Extensions");
       steps.push({id: "extensions", page: "extensions.html", target: ".medcom-artifact-overview, #segment-content .col-12", title: "Extensions", text: "These extensions are add-on elements to a FHIR profile that the base does not provide. Profiles may also reuse extensions from other guides."});
@@ -189,7 +191,7 @@
       description.textContent = step.text;
       if (step.id === "profile") {
         var heading = document.querySelector(".medcom-page-title");
-        if (heading) description.textContent = "We have chosen " + heading.textContent.replace(/^Resource Profile:\s*/, "").trim() + " as one example from this guide's Profiles list. These tabs provide its rules, detailed definitions, mappings, examples, and XML/JSON definitions.";
+        if (heading) description.textContent = "We have chosen " + heading.textContent.replace(/^Resource Profile:\s*/, "").trim() + " as one example from this guide's Profiles menu. These tabs provide its rules, detailed definitions, mappings, examples, and XML/JSON definitions.";
       }
       status.textContent = "Step " + (index + 1) + " of " + steps.length;
       back.disabled = index === 0;

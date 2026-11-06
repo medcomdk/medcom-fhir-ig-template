@@ -1,0 +1,19 @@
+{% assign medcom_profiles = site.data.structuredefinitions | sort %}
+{% assign medcom_profile_count = 0 %}
+{% capture medcom_profile_links %}
+{% for medcom_entry in medcom_profiles %}
+  {% assign medcom_profile = medcom_entry[1] %}
+  {% if medcom_profile.derivation == 'constraint' and medcom_profile.type != 'Extension' %}
+    {% assign medcom_profile_count = medcom_profile_count | plus: 1 %}
+    <li><a href="{{medcom_profile.path | escape}}">{{medcom_profile.title | default: medcom_profile.name | escape_once}}</a></li>
+  {% endif %}
+{% endfor %}
+{% endcapture %}
+{% if medcom_profile_count > 0 %}
+<li class="dropdown medcom-profiles-menu">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Profiles <b class="caret"></b></a>
+  <ul class="dropdown-menu">{{medcom_profile_links}}</ul>
+</li>
+{% else %}
+<li><a href="profiles.html">Profiles</a></li>
+{% endif %}
