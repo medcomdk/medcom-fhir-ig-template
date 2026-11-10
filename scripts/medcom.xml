@@ -13,6 +13,15 @@
   <target name="medcom.profileMenuLayout" extensionOf="onLoad.extend">
     <replace file="${ig.template}/includes/fragment-pagebegin.html" token="{% include menu.xml %}" value="{% include medcom-menu.xml %}"/>
   </target>
+  <!-- The deferred page loader replaces the base template's unconditional libraries. -->
+  <target name="medcom.pageLibraries" extensionOf="onLoad.extend">
+    <replaceregexp file="${ig.template}/includes/fragment-pagebegin.html" flags="gs"
+      match="&lt;script\b[^&gt;]*src=&quot;[^&quot;]*assets/js/(prism|mermaid|mermaid-init)\.js&quot;[^&gt;]*&gt;.*?&lt;/script&gt;"
+      replace=""/>
+    <replaceregexp file="${ig.template}/includes/fragment-pagebegin.html" flags="g"
+      match="&lt;link\b[^&gt;]*href=&quot;[^&quot;]*assets/css/prism\.css&quot;[^&gt;]*&gt;"
+      replace=""/>
+  </target>
   <target name="medcom.profileMenu" extensionOf="onGenerate.extend" depends="onGenerate.processIncludes">
     <condition property="medcom.menu.source" value="${ig.root}/input/includes/menu.xml" else="${ig.root}/fsh-generated/includes/menu.xml">
       <available file="${ig.root}/input/includes/menu.xml"/>
