@@ -1,0 +1,9 @@
+{
+  "script": "scripts/medcom.xml",
+  "otherScripts": ["scripts/ant.xml"],
+  "targets": {
+    "onLoad": "onLoad",
+    "onGenerate": "onGenerate",
+    "onCheck": "onCheck"
+  }
+}
