@@ -24,9 +24,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-// Builds a single quick-search dropdown entry. When igLabel is provided
-// (i.e. the result comes from another IG), it is shown next to the title
-// so the user knows the link will take them to a different IG.
 function createQuickResultItem(result, igLabel) {
   const item = document.createElement("div");
   item.style.padding = "5px 0";
@@ -88,10 +85,7 @@ function setupQuickSearch(searchBox) {
       });
 
       if (topOtherResults.length > 0) {
-        // No "Other IGs" heading here: the quick-search box is small, and each
-        // result already shows its own IG name inline (via createQuickResultItem),
-        // so a separate heading is redundant. A thin divider is enough to
-        // separate them from the current IG's results above.
+  
         const divider = document.createElement("div");
         divider.style.marginTop = "6px";
         divider.style.paddingTop = "6px";
@@ -201,8 +195,6 @@ filters.forEach(filter => {
   return;
 }
 
-    // "This IG" scope drops results from other IGs up front, so neither the
-    // result count nor the "Other IGs" section below can show them.
     const scopedResults = selectedScope === "current"
       ? results.filter(result => !result.ig || result.ig === currentIG)
       : results;
@@ -240,8 +232,6 @@ function renderResults(groupedResults, container) {
 
   renderResultSection("This IG", currentIG, container);
 
-  // Other IGs are shown in their own section, grouped under the IG they
-  // belong to, so the user can tell which results take them to a different IG.
   if (otherIGs.length > 0) {
     renderResultSection("Other IGs", otherIGs, container, { showIGBadge: true });
   }
