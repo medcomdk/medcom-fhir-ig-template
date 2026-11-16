@@ -365,6 +365,21 @@
   background: #edf1f4;
 }
 
+/* Badge shown on results that belong to another IG than the one being browsed */
+.search-result-ig {
+  display: inline-block;
+
+  margin: 5px 6px 4px 0;
+  padding: 4px 9px;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  color: #5a3d99;
+  background: #f0eaf9;
+  border-radius: 4px;
+}
+
 /* ---------------------------------------------------------
    Mobile
    --------------------------------------------------------- */

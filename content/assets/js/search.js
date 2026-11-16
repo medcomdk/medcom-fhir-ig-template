@@ -24,6 +24,21 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+// Builds a single quick-search dropdown entry. When igLabel is provided
+// (i.e. the result comes from another IG), it is shown next to the title
+// so the user knows the link will take them to a different IG.
+function createQuickResultItem(result, igLabel) {
+  const item = document.createElement("div");
+  item.style.padding = "5px 0";
+
+  const link = document.createElement("a");
+  link.href = result.url;
+  link.textContent = igLabel ? result.title + " (" + igLabel + ")" : result.title;
+
+  item.appendChild(link);
+  return item;
+}
+
 function setupQuickSearch(searchBox) {
 
   let searchTimeout;
@@ -56,26 +71,37 @@ function setupQuickSearch(searchBox) {
     }
 
     searchTimeout = setTimeout(async () => {
-    const results = await searchCurrentIG(query);
-    
-    const topResults = results.slice(0, 5);
+    const currentIG = getCurrentIG();
+    const results = await searchCurrentIG(query, currentIG);
+    const { currentIG: currentIGResults, otherIGs } = groupResultsByIG(results, currentIG);
+
+    const topResults = currentIGResults.slice(0, 5);
+    const topOtherResults = otherIGs.slice(0, 3);
 
     resultBox.innerHTML = "";
 
-    if (topResults.length === 0) {
+    if (topResults.length === 0 && topOtherResults.length === 0) {
       resultBox.innerHTML = "<div>No results found</div>";
     } else {
       topResults.forEach(result => {
-        const item = document.createElement("div");
-        item.style.padding = "5px 0";
-
-        const link = document.createElement("a");
-        link.href = result.url;
-        link.textContent = result.title;
-
-        item.appendChild(link);
-        resultBox.appendChild(item);
+        resultBox.appendChild(createQuickResultItem(result));
       });
+
+      if (topOtherResults.length > 0) {
+        // No "Other IGs" heading here: the quick-search box is small, and each
+        // result already shows its own IG name inline (via createQuickResultItem),
+        // so a separate heading is redundant. A thin divider is enough to
+        // separate them from the current IG's results above.
+        const divider = document.createElement("div");
+        divider.style.marginTop = "6px";
+        divider.style.paddingTop = "6px";
+        divider.style.borderTop = "1px solid #ddd";
+        resultBox.appendChild(divider);
+
+        topOtherResults.forEach(result => {
+          resultBox.appendChild(createQuickResultItem(result, result.igName));
+        });
+      }
 
       const searchPage = document.createElement("div");
       searchPage.style.marginTop = "8px";
@@ -105,6 +131,10 @@ async function setupFullSearch(searchBox) {
   '.search-filter input[type="checkbox"]'
 );
 
+  const scopeInputs = document.querySelectorAll(
+  'input[name="search-scope"]'
+);
+
   let resultsContainer = document.getElementById("search-results");
   const status = document.getElementById("search-status");
   const sort = document.getElementById("search-sort");
@@ -130,6 +160,10 @@ filters.forEach(filter => {
   filter.addEventListener("change", performSearch);
 });
 
+  scopeInputs.forEach(scopeInput => {
+  scopeInput.addEventListener("change", performSearch);
+});
+
   if (sort) {
     sort.addEventListener("change", performSearch);
   }
@@ -145,6 +179,7 @@ filters.forEach(filter => {
       .filter(filter => filter.checked)
       .map(filter => filter.value);
     const selectedSort = sort ? sort.value : "relevance";
+    const selectedScope = getSelectedScope(scopeInputs);
 
     resultsContainer.innerHTML = "";
     if (status) {
@@ -159,16 +194,25 @@ filters.forEach(filter => {
       status.textContent = "Searching...";
     }
 
-    const results = await searchCurrentIG(query);
+    const currentIG = getCurrentIG();
+    const results = await searchCurrentIG(query, currentIG);
 
     if (currentSearchId !== searchId) {
   return;
 }
-   const filteredResults = results.filter(result =>
+
+    // "This IG" scope drops results from other IGs up front, so neither the
+    // result count nor the "Other IGs" section below can show them.
+    const scopedResults = selectedScope === "current"
+      ? results.filter(result => !result.ig || result.ig === currentIG)
+      : results;
+
+   const filteredResults = scopedResults.filter(result =>
   matchesFilter(result, selectedFilters)
 );
 
     const sortedResults = sortResults(filteredResults, selectedSort);
+    const grouped = groupResultsByIG(sortedResults, currentIG);
 
     if (status) {
       status.textContent =
@@ -177,81 +221,111 @@ filters.forEach(filter => {
     }
 
     renderResults(
-      sortedResults,
+      grouped,
       resultsContainer
     );
   }
 }
 
-function renderResults(results, container) {
-  if (results.length === 0) {
+function renderResults(groupedResults, container) {
+  const { currentIG, otherIGs } = groupedResults;
+
+  container.innerHTML = "";
+
+  if (currentIG.length === 0 && otherIGs.length === 0) {
     container.innerHTML =
       "<p>No results found.</p>";
     return;
   }
 
+  renderResultSection("This IG", currentIG, container);
+
+  // Other IGs are shown in their own section, grouped under the IG they
+  // belong to, so the user can tell which results take them to a different IG.
+  if (otherIGs.length > 0) {
+    renderResultSection("Other IGs", otherIGs, container, { showIGBadge: true });
+  }
+}
+
+function renderResultSection(headingText, results, container, { showIGBadge = false } = {}) {
+  if (results.length === 0) {
+    return;
+  }
+
   const heading = document.createElement("div");
   heading.className = "search-results-heading";
-  heading.textContent = "This IG";
+  heading.textContent = headingText;
   container.appendChild(heading);
 
   results.forEach(result => {
-    const resultElement =
-      document.createElement("div");
+    container.appendChild(createResultElement(result, { showIGBadge }));
+  });
+}
 
-    resultElement.className =
-      "search-result";
+function createResultElement(result, { showIGBadge = false } = {}) {
+  const resultElement =
+    document.createElement("div");
 
-    const breadcrumb =
-    document.createElement("small");
-    breadcrumb.className = "search-result-breadcrumb";
-    breadcrumb.textContent = (result.breadcrumb || []).join(" > ");
-    resultElement.appendChild(breadcrumb);
+  resultElement.className =
+    "search-result";
 
-    const title =
-      document.createElement("div");
-      title.className = "search-result-title";
+  const breadcrumb =
+  document.createElement("small");
+  breadcrumb.className = "search-result-breadcrumb";
+  breadcrumb.textContent = (result.breadcrumb || []).join(" > ");
+  resultElement.appendChild(breadcrumb);
+
+  const title =
+    document.createElement("div");
+    title.className = "search-result-title";
 
 
-    const link =
-      document.createElement("a");
+  const link =
+    document.createElement("a");
 
-    link.href = result.url;
-    link.textContent = result.title;
+  link.href = result.url;
+  link.textContent = result.title;
 
-    const typeBadge = document.createElement("span");
+  const typeBadge = document.createElement("span");
 
 typeBadge.className =
-  "search-result-type type-" + result.type;
+"search-result-type type-" + result.type;
 
 const typeNames = {
-  profiles: "Profile",
-  extensions: "Extension",
-  examples: "Example",
-  pages: "Documentation"
+profiles: "Profile",
+extensions: "Extension",
+examples: "Example",
+pages: "Documentation"
 };
 
 typeBadge.textContent =
-  typeNames[result.type] || "Documentation";
+typeNames[result.type] || "Documentation";
 
-    title.appendChild(typeBadge);
-    title.appendChild(link);
+  title.appendChild(typeBadge);
 
-    const path =
-  document.createElement("small");
+  if (showIGBadge && result.igName) {
+    const igBadge = document.createElement("span");
+    igBadge.className = "search-result-ig";
+    igBadge.textContent = result.igName;
+    title.appendChild(igBadge);
+  }
+
+  title.appendChild(link);
+
+  const path =
+document.createElement("small");
 
 path.className = "search-result-path";
 path.textContent = result.path;
 
-    const snippet =
-      document.createElement("p");
+  const snippet =
+    document.createElement("p");
 
-    snippet.textContent = result.text.substring(0, 300);
+  snippet.textContent = result.text.substring(0, 300);
 
-    resultElement.appendChild(title);
-    resultElement.appendChild(path);
-    resultElement.appendChild(snippet);
+  resultElement.appendChild(title);
+  resultElement.appendChild(path);
+  resultElement.appendChild(snippet);
 
-    container.appendChild(resultElement);
-  });
+  return resultElement;
 }
