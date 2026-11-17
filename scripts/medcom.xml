@@ -12,11 +12,12 @@
   </target>
   <target name="medcom.profileMenuLayout" extensionOf="onLoad.extend">
     <replace file="${ig.template}/includes/fragment-pagebegin.html" token="{% include menu.xml %}" value="{% include medcom-menu.xml %}"/>
+    <replace file="${ig.template}/includes/fragment-pagebegin.html" token="{% include {{ include.lang }}/menu.xml %}" value="{% include medcom-menu.xml %}"/>
   </target>
   <!-- The deferred page loader replaces the base template's unconditional libraries. -->
   <target name="medcom.pageLibraries" extensionOf="onLoad.extend">
     <replaceregexp file="${ig.template}/includes/fragment-pagebegin.html" flags="gs"
-      match="&lt;script\b[^&gt;]*src=&quot;[^&quot;]*assets/js/(prism|mermaid|mermaid-init)\.js&quot;[^&gt;]*&gt;.*?&lt;/script&gt;"
+      match="&lt;script\b[^&gt;]*src=&quot;[^&quot;]*assets/js/(prism(?:-fhirpath|-cql)?|mermaid|mermaid-init)\.js&quot;[^&gt;]*&gt;.*?&lt;/script&gt;"
       replace=""/>
     <replaceregexp file="${ig.template}/includes/fragment-pagebegin.html" flags="g"
       match="&lt;link\b[^&gt;]*href=&quot;[^&quot;]*assets/css/prism\.css&quot;[^&gt;]*&gt;"
@@ -38,8 +39,11 @@
   <!-- Retain the base grouping pipeline while using our final page transform. -->
   <target name="onGenerate.processIg">
     <xslt in="${onGenerate.ig.source}xml" out="${onGenerate.ig.source}1.xml" style="${ig.scripts}/onGenerate.group.xslt"/>
-    <replace file="${onGenerate.ig.source}1.xml" token="&lt;!--TEMPLATE_GROUPS_HERE--&gt;" value="${groupings}"/>
+    <replace file="${onGenerate.ig.source}1.xml" encoding="UTF-8" token="&lt;!--TEMPLATE_GROUPS_HERE--&gt;" value="${groupings}"/>
+    <replace file="${onGenerate.ig.source}1.xml" encoding="UTF-8" token="&lt;!--TRANSLATIONS_HERE--&gt;" value="${translations}"/>
+    <replace file="${onGenerate.ig.source}1.xml" encoding="UTF-8" token="&lt;!--ARTIFACT_TRANSLATIONS_HERE--&gt;" value="${artifactTranslations}"/>
     <xslt in="${onGenerate.ig.source}1.xml" out="${onGenerate.ig.source}2.xml" style="${ig.scripts}/onGenerate.groupSort.xslt"/>
     <xslt in="${onGenerate.ig.source}2.xml" out="${onGenerate.ig.dest}xml" style="${ig.scripts}/medcom-final.xslt"/>
+    <xslt in="${onGenerate.ig.source}2.xml" out="${ig.temp}/_data/stringsArtifacts.json" style="${ig.scripts}/onGenerate.extractArtifacts.xslt"/>
   </target>
 </project>

@@ -8,7 +8,7 @@ const {tmpdir} = require("node:os");
 // Set PUBLISHER_JAR when the Publisher is not installed beside this repository.
 const publisherJar = process.env.PUBLISHER_JAR || resolve(__dirname, "../../publisher.jar");
 
-test("GitHub and local templates preserve inherited resource defaults", {
+test("Local and extracted GitHub templates preserve inherited resource defaults", {
   skip: !process.env.PUBLISHER_JAR && !existsSync(publisherJar) && "Set PUBLISHER_JAR to run the Publisher integration test"
 }, () => {
   const directory = mkdtempSync(join(tmpdir(), "medcom-template-inheritance-"));
@@ -23,16 +23,17 @@ test("GitHub and local templates preserve inherited resource defaults", {
     }
 
     // Use a small cached base so the real Publisher loader can run without network access.
-    const base = join(directory, "cache/fhir.base.template#current");
+    const base = join(directory, "cache/fhir2.base.template#current");
     mkdirSync(join(base, "package"), {recursive: true});
     mkdirSync(join(base, "scripts"));
     writeFileSync(join(base, "package/package.json"), JSON.stringify({
-      name: "fhir.base.template", version: "current", type: "fhir.template"
+      name: "fhir2.base.template", version: "current", type: "fhir.template"
     }));
     writeFileSync(join(base, "config.json"), JSON.stringify({
       script: "scripts/ant.xml",
       otherScripts: [],
       targets: {onLoad: "onLoad", onGenerate: "onGenerate", onCheck: "onCheck"},
+      "multilanguage-format": true,
       defaults: {Any: {base: "{{[type]}}-{{[id]}}.html"}},
       formats: ["xml", "json", "ttl"],
       extraTemplates: [{name: "testing"}]

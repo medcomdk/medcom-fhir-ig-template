@@ -1,8 +1,9 @@
 ---
 ---
 {% include medcom-search-config.html %}
+{% include medcom-page-language.html %}
 <!DOCTYPE HTML>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{{medcom_lang}}" xml:lang="{{medcom_lang}}">
   <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -10,13 +11,13 @@
     <link href="{{site.data.info.assets}}fhir.css" rel="stylesheet"/>
     <link href="{{site.data.info.assets}}assets/css/bootstrap-fhir.css" rel="stylesheet"/>
     <link href="{{site.data.info.assets}}assets/css/project.css" rel="stylesheet"/>
-    {% include fragment-css.html %}
+    {% include fragment-css.html lang=medcom_lang %}
     {% if medcom_local_search %}<script src="{{site.data.info.assets}}assets/js/ig-search.js" defer="defer"> </script>{% endif %}
   </head>
   <body>
     <div id="segment-header" class="segment">
       <div class="container">
-        {% include fragment-header.html %}
+        {% include fragment-header.html lang=medcom_lang %}
         <div id="ig-status">
           <p><span>{{site.data.fhir.ig.title | escape_once}}</span><br/><span>{{site.data.fhir.ig.version | escape_once}} - {{site.data.fhir.releaseLabel | escape_once}}
           {% assign igId = site.data.fhir.ig.id | prepend: "ImplementationGuide/" %}
@@ -60,4 +61,4 @@
               <p>Use the navigation menu or return to <a href="{{site.data.info.assets}}index.html">Home</a> to browse this guide.</p>
               {% endif %}
             </div>
-    {% include fragment-pageend.html %}
+    {% include fragment-pageend.html lang=medcom_lang %}

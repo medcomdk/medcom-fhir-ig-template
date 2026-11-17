@@ -1,0 +1,10 @@
+{%- assign localPage = page.path | split: '/' | last -%}
+{%- assign medcom_lang = site.data.languages.defLang | default: 'en' -%}
+{%- assign medcom_root = '' -%}
+{%- assign medcom_path_lang = page.path | split: '/' | first -%}
+{%- for medcom_language in site.data.languages.langs -%}
+  {%- if medcom_language.code == medcom_path_lang -%}
+    {%- assign medcom_lang = medcom_language.code -%}
+    {%- assign medcom_root = '../' -%}
+  {%- endif -%}
+{%- endfor -%}

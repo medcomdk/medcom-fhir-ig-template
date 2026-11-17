@@ -1,14 +1,15 @@
 {% comment %}
-Original: https://github.com/HL7/ig-template-base/blob/master/includes/template-page-md.html
+Original: https://github.com/HL7/ig-template-base2/blob/main/includes/template-page-md.html
 The shared page-navigation script builds the contents panel from rendered headings.
 {% endcomment %}
-{% include fragment-pagebegin.html %}
+{% assign localPage = page.path | split: '/' | last %}
+{% include fragment-pagebegin.html lang=include.lang %}
 <div class="col-12">
   <!--ReleaseHeader--><p id="publish-box">Publish Box goes here</p><!--EndReleaseHeader-->
-  {% if page.path == 'index.html' %}
-  {% include fragment-igTable.html %}
+  {% if localPage == 'index.html' %}
+  {% include fragment-igTable.html lang=include.lang %}
   {% endif %}
-  {% include fragment-pageTable.html %}
+  {% include fragment-pageTable.html lang=include.lang %}
   {% assign path = page.path | split: '.html' %}
 {% capture page-content %}
 <div>
@@ -18,4 +19,4 @@ The shared page-navigation script builds the contents panel from rendered headin
 {% endcapture %}
   {{page-content | markdownify}}
 </div>
-{% include fragment-pageend.html %}
+{% include fragment-pageend.html lang=include.lang %}
