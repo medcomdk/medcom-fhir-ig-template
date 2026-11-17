@@ -1,9 +1,13 @@
 
-async function searchCurrentIG(query, currentIg) {
+async function searchCurrentIG(query, currentIg, version) {
   let url = "http://localhost:3000/search?q=" + encodeURIComponent(query);
 
   if (currentIg) {
     url += "&ig=" + encodeURIComponent(currentIg);
+  }
+  
+  if (version) {
+    url += "&version=" + encodeURIComponent(version);
   }
 
   const response = await fetch(url);
