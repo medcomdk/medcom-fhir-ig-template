@@ -33,10 +33,8 @@ class LoadTemplate {
     }
 
     // Feed a GitHub-shaped archive through the Publisher's actual URL loader.
-    // Publisher 2.3.4 looks up configuration at package/$root, while its ZIP
-    // reader strips one package/ prefix. The companion config at
-    // package/package/$root/config.json makes the inheritance merge work on
-    // Unix. On Windows, extract first to avoid the ZIP loader's path mismatch.
+    // Inherit config.json unchanged: an overriding config is not merged on
+    // Windows because ZIP package keys and configuration lookup paths differ.
     URL.setURLStreamHandlerFactory(protocol -> "https".equals(protocol) ? new URLStreamHandler() {
       protected URLConnection openConnection(URL url) throws IOException {
         if (!url.toString().equals("https://github.com/medcomdk/medcom-fhir-ig-template/archive/master.zip")) {
@@ -82,15 +80,15 @@ class LoadTemplate {
         : "https://github.com/medcomdk/medcom-fhir-ig-template/tree/master";
       Template template = ((TemplateManager) constructor.newInstance(cache, logger))
         .loadTemplate(location, ig.toString(), "medcom.fhir.dk.test", false, false, false);
-      if (mode.equals("github") && java.io.File.separatorChar == '\\' && !template.config().has("defaults")) {
-        System.out.println("Direct GitHub ZIP loading loses inherited defaults on Windows; checking extracted archive instead");
-        continue;
-      }
       if (template.getConfig("ActorDefinition", "ProducerActor", true) == null) {
         throw new AssertionError(mode + " lost the inherited resource defaults");
       }
-      if (!"scripts/medcom.xml".equals(template.config().asString("script"))) {
-        throw new AssertionError(mode + " lost the MedCom script configuration");
+      if (!"scripts/ant.xml".equals(template.config().asString("script"))) {
+        throw new AssertionError(mode + " changed the inherited script entry point");
+      }
+      String ant = Files.readString(ig.resolve("template/scripts/ant.xml"));
+      if (!ant.contains("medcom.overviewPages") || !ant.contains("base-ant.xml")) {
+        throw new AssertionError(mode + " did not install the MedCom Ant customizations");
       }
       if (!template.config().has("formats") || !template.config().has("extraTemplates")) {
         throw new AssertionError(mode + " lost inherited rendering settings");

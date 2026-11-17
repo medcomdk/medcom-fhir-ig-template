@@ -8,14 +8,14 @@ const {tmpdir} = require("node:os");
 // Set PUBLISHER_JAR when the Publisher is not installed beside this repository.
 const publisherJar = process.env.PUBLISHER_JAR || resolve(__dirname, "../../publisher.jar");
 
-test("Local and extracted GitHub templates preserve inherited resource defaults", {
+test("Local and direct GitHub templates preserve inherited resource defaults", {
   skip: !process.env.PUBLISHER_JAR && !existsSync(publisherJar) && "Set PUBLISHER_JAR to run the Publisher integration test"
 }, () => {
   const directory = mkdtempSync(join(tmpdir(), "medcom-template-inheritance-"));
   try {
     const source = join(directory, "source");
     mkdirSync(source);
-    for (const name of ["config.json", "package", "includes", "content", "scripts"]) {
+    for (const name of ["package", "includes", "content", "scripts"]) {
       cpSync(join(__dirname, "..", name), join(source, name), {
         recursive: true,
         filter: path => !/[/\\]\.index\./.test(path)
