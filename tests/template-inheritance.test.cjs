@@ -23,11 +23,11 @@ test("Local and direct GitHub templates preserve inherited resource defaults", {
     }
 
     // Use a small cached base so the real Publisher loader can run without network access.
-    const base = join(directory, "cache/fhir2.base.template#current");
+    const base = join(directory, "cache/fhir2.base.template#0.1.0");
     mkdirSync(join(base, "package"), {recursive: true});
     mkdirSync(join(base, "scripts"));
     writeFileSync(join(base, "package/package.json"), JSON.stringify({
-      name: "fhir2.base.template", version: "current", type: "fhir.template"
+      name: "fhir2.base.template", version: "0.1.0", type: "fhir.template"
     }));
     writeFileSync(join(base, "config.json"), JSON.stringify({
       script: "scripts/ant.xml",
