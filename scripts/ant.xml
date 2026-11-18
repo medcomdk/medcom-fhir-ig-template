@@ -15,6 +15,22 @@
     <replace file="${ig.template}/includes/fragment-pagebegin.html" token="{% include menu.xml %}" value="{% include medcom-menu.xml %}"/>
     <replace file="${ig.template}/includes/fragment-pagebegin.html" token="{% include {{ include.lang }}/menu.xml %}" value="{% include medcom-menu.xml %}"/>
   </target>
+  <target name="medcom.pageAssets" extensionOf="onLoad.extend">
+    <replace file="${ig.template}/includes/fragment-pagebegin.html" encoding="UTF-8"
+      token="&lt;!DOCTYPE HTML&gt;" value="&lt;!DOCTYPE HTML&gt;&#xA;{% include medcom-page-language.html %}"/>
+    <replace dir="${ig.template}/includes" includes="fragment-pagebegin.html,fragment-pageend.html" encoding="UTF-8"
+      token="src=&quot;assets/" value="src=&quot;{{medcom_root}}assets/"/>
+  </target>
+  <!-- Repair markup in the inherited 0.1.0 layouts before Publisher expands them. -->
+  <target name="medcom.profileMarkup" extensionOf="onLoad.extend">
+    <replace file="${ig.template}/layouts/layout-profile-history.html" encoding="UTF-8">
+      <replacetoken><![CDATA[  <h2 id="root">{{modelType}}: {{site.data.resources[resource_].titlelang['{{[lang]}}']}}]]></replacetoken>
+      <replacevalue/>
+    </replace>
+    <replaceregexp encoding="UTF-8" match="(&lt;/p&gt;)\s*&lt;/p&gt;" replace="\1" flags="g">
+      <fileset dir="${ig.template}/layouts" includes="layout-profile.html,layout-ext.html"/>
+    </replaceregexp>
+  </target>
   <!-- The deferred page loader replaces the base template's unconditional libraries. -->
   <target name="medcom.pageLibraries" extensionOf="onLoad.extend">
     <replaceregexp file="${ig.template}/includes/fragment-pagebegin.html" flags="gs"

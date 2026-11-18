@@ -12,5 +12,9 @@
   <h3>Examples</h3>
   <p><a href="{{medcom_root}}examples.xml.zip">Download examples as XML</a></p>
   <p><a href="{{medcom_root}}examples.json.zip">Download examples as JSON</a></p>
+  <h3>FHIR version compatibility</h3>
+  {% capture medcom_cross_version %}{% include cross-version-analysis.xhtml %}{% endcapture %}
+  {% assign medcom_package_path = medcom_root | append: 'package.' %}
+  <div>{{medcom_cross_version | replace: '../package.', medcom_package_path}}</div>
 </div>
 {% include fragment-pageend.html lang=medcom_lang %}

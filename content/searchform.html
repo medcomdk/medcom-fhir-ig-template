@@ -22,7 +22,7 @@
           <p><span>{{site.data.fhir.ig.title | escape_once}}</span><br/><span>{{site.data.fhir.ig.version | escape_once}} - {{site.data.fhir.releaseLabel | escape_once}}
           {% assign igId = site.data.fhir.ig.id | prepend: "ImplementationGuide/" %}
           {% for jurisdiction in site.data.resources[igId].jurisdictions %}
-          {% if jurisdiction.flag %}<img alt="{{jurisdiction.name}} flag" src="assets/images/{{jurisdiction.flag}}.svg" height="16" title="{{jurisdiction.name}}"/>{% endif %}
+          {% if jurisdiction.flag %}<img alt="{{jurisdiction.name}} flag" src="{{medcom_root}}assets/images/{{jurisdiction.flag}}.svg" height="16" title="{{jurisdiction.name}}"/>{% endif %}
           {% endfor %}
           </span></p>
         </div>
