@@ -1,0 +1,156 @@
+<!DOCTYPE HTML>
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Search</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="author" content="http://www.medcom.dk"/>
+
+  <link href="fhir.css" rel="stylesheet"/>
+
+  <!-- Bootstrap core CSS -->
+  <link href="assets/css/bootstrap-fhir.css" rel="stylesheet"/>
+
+  <!-- Project extras -->
+  <link href="assets/css/project.css" rel="stylesheet"/>
+  <link href="assets/css/pygments-manni.css" rel="stylesheet"/>
+  <link href="assets/css/jquery-ui.css" rel="stylesheet"/>
+  <link href="assets/css/prism.css" rel="stylesheet"/>
+  <link href="assets/css/cqf.css" rel="stylesheet"/>
+
+  <!-- MedCom template -->
+  <link href="assets/css/hl7-dk.css" rel="stylesheet"/>
+  <link href="assets/css/search.css" rel="stylesheet"/>
+</head>
+
+<body onload="document.body.style.opacity='1'">
+
+  <!--
+    This page is copied as-is by the template into every IG (it is not run
+    through the normal page template), so the IG's real header/navbar/footer
+    can't be inserted at build time. The markup below is a minimal fallback;
+    search.js replaces it at runtime with the current IG's own header,
+    navbar and footer, cloned from index.html, so this page looks the same
+    as every other page regardless of which IG uses this template.
+  -->
+  <div id="segment-header" class="segment">
+    <div class="container">
+      <div id="hl7-nav">
+        <a id="hl7-logo" href="index.html">
+          <img height="50" alt="Visit MedComs website" src="assets/images/dark-medcom-logo.png"/>
+        </a>
+      </div>
+
+      <div id="ig-status" style="font-size:24px;padding-top: 20px;">
+        <b id="ig-title">Search</b>
+      </div>
+    </div>
+  </div>
+
+  <div id="segment-navbar" class="segment">
+    <div id="stripe"> </div>
+    <div class="container"></div>
+  </div>
+
+  <div id="segment-breadcrumb" class="segment">
+    <div class="container">
+      <ul class="breadcrumb">
+        <li><a href="toc.html"><b>Table of Contents</b></a></li><li><b>Search</b></li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="segment-content" class="segment">
+    <div class="container">
+      <div class="row">
+        <div class="inner-wrapper">
+
+          <div class="col-12">
+
+            <h2>Search</h2>
+
+            <div id="search-page">
+
+              <div class="search-page-input">
+                <input
+                  id="full-search-box"
+                  type="text"
+                  placeholder="Search the documentation..."
+                  autocomplete="off"
+                />
+              </div>
+
+              <div class="search-scope">
+                <strong>Search in:</strong>
+
+                <label>
+                  <input type="radio" name="search-scope" value="current">
+                  This IG
+                </label>
+
+                <label>
+                  <input type="radio" name="search-scope" value="all" checked>
+                  All IGs
+                </label>
+              </div>
+
+              <div class="search-filters">
+
+                <div class="search-filter">
+                  <strong>Filter</strong>
+
+                  <label class="filter-chip">
+                    <input type="checkbox" value="profiles">
+                    <span>Profiles</span>
+                  </label>
+
+                  <label class="filter-chip">
+                    <input type="checkbox" value="extensions">
+                    <span>Extensions</span>
+                  </label>
+
+                  <label class="filter-chip">
+                    <input type="checkbox" value="examples">
+                    <span>Examples</span>
+                  </label>
+                </div>
+
+              </div>
+
+              <div id="search-status"></div>
+
+              <div id="search-results"></div>
+
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="segment-footer" class="segment">
+    <div class="container">
+      <div class="inner-wrapper">
+        <p>
+          <span id="ig-footer"></span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div id="segment-post-footer" class="segment hidden">
+    <div class="container"></div>
+  </div>
+
+  <script src="assets/js/jquery.js"> </script>
+  <script src="assets/js/jquery-ui.min.js"> </script>
+  <script src="assets/js/bootstrap.min.js"> </script>
+  <script src="assets/js/publish-box-status.js"> </script>
+  <script src="assets/js/search-engine.js"></script>
+  <script src="assets/js/search-categories.js"></script>
+  <script src="assets/js/search.js"></script>
+</body>
+</html>

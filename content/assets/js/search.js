@@ -6,7 +6,25 @@ function matchesFilter(result, selectedFilters) {
     return selectedFilters.includes(result.type);
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+function sortResults(results, sortBy) {
+  if (sortBy === "title") {
+    return [...results].sort((a, b) =>
+      a.title.localeCompare(b.title)
+    );
+  }
+
+  // Meilisearch har allerede sorteret efter relevans.
+  return results;
+}
+
+document.addEventListener("DOMContentLoaded", async function () {
+  const currentPage =
+    window.location.pathname.split("/").pop() || "index.html";
+
+  if (currentPage === "search.html") {
+    await applyPageChrome();
+  }
+
   const quickSearch = document.getElementById("search-box");
   const fullSearch = document.getElementById("full-search-box");
 
@@ -17,9 +35,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   if (quickSearch) {
-    const currentPage =
-      window.location.pathname.split("/").pop() || "index.html";
-
     if (currentPage === "search.html") {
   quickSearch.style.display = "none";
 } else {
@@ -31,6 +46,51 @@ document.addEventListener("DOMContentLoaded", function () {
     setupFullSearch(fullSearch);
   }
 });
+
+/*
+ * search.html is copied as-is by the template into every IG, so (unlike
+ * every other page) it isn't rendered through the normal page template and
+ * doesn't automatically get the IG's real header/navbar/footer. To make it
+ * look like the rest of the site for whichever IG is using this template,
+ * fetch that IG's own index.html and clone its header/navbar/footer markup
+ * into this page. If that fails (e.g. offline, or opened as a standalone
+ * file), the page keeps its minimal built-in fallback markup.
+ */
+async function applyPageChrome() {
+  try {
+    const response = await fetch("index.html");
+
+    if (!response.ok) {
+      return;
+    }
+
+    const doc = new DOMParser().parseFromString(
+      await response.text(),
+      "text/html"
+    );
+
+    copySegment(doc, "segment-header");
+    copySegment(doc, "segment-navbar");
+    copySegment(doc, "segment-footer");
+
+    const titleParts = doc.title.split(" - ");
+
+    if (titleParts.length > 1) {
+      document.title = "Search - " + titleParts.slice(1).join(" - ");
+    }
+  } catch (e) {
+    // Keep the fallback markup already in the page.
+  }
+}
+
+function copySegment(doc, id) {
+  const source = doc.getElementById(id);
+  const target = document.getElementById(id);
+
+  if (source && target) {
+    target.innerHTML = source.innerHTML;
+  }
+}
 
 function createQuickResultItem(result, igLabel) {
   const item = document.createElement("div");
