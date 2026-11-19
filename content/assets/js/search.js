@@ -1,3 +1,11 @@
+function matchesFilter(result, selectedFilters) {
+    if (selectedFilters.length === 0) {
+        return true;
+    }
+
+    return selectedFilters.includes(result.type);
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   const quickSearch = document.getElementById("search-box");
   const fullSearch = document.getElementById("full-search-box");
