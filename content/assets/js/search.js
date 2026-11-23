@@ -13,7 +13,6 @@ function sortResults(results, sortBy) {
     );
   }
 
-  // Meilisearch har allerede sorteret efter relevans.
   return results;
 }
 
@@ -68,6 +67,12 @@ async function applyPageChrome() {
       await response.text(),
       "text/html"
     );
+
+    // index.html is rendered through the normal page template, so (unlike
+    // search.html) it has a real publish-box/canonical link we can use to
+    // identify the current IG, even during local development where the
+    // page's own URL doesn't contain "/ig/<id>/" (see getCurrentIG()).
+    rememberIGFromDocument(doc);
 
     copySegment(doc, "segment-header");
     copySegment(doc, "segment-navbar");
@@ -257,22 +262,39 @@ filters.forEach(filter => {
     }
 
     const currentIG = getCurrentIG();
-    const results = await searchCurrentIG(query, currentIG);
 
-    if (currentSearchId !== searchId) {
+if (selectedScope === "current" && !currentIG) {
+  if (status) {
+    status.textContent = "Could not identify current IG.";
+  }
   return;
 }
 
-    const scopedResults = selectedScope === "current"
-      ? results.filter(result => !result.ig || result.ig === currentIG)
-      : results;
+const results = await searchCurrentIG(
+  query,
+  selectedScope === "current" ? currentIG : null
+);
+
+const scopedResults = selectedScope === "current"
+  ? results.filter(result =>
+      result.ig?.toLowerCase() === currentIG.toLowerCase()
+    )
+  : results;
+
+if (currentSearchId !== searchId) {
+  return;
+}
+
 
    const filteredResults = scopedResults.filter(result =>
   matchesFilter(result, selectedFilters)
 );
 
-    const sortedResults = sortResults(filteredResults, selectedSort);
-    const grouped = groupResultsByIG(sortedResults, currentIG);
+   const sortedResults = sortResults(filteredResults, selectedSort);
+
+const grouped = selectedScope === "current"
+  ? { currentIG: sortedResults, otherIGs: [] }
+  : groupResultsByIG(sortedResults, currentIG);
 
     if (status) {
       status.textContent =
