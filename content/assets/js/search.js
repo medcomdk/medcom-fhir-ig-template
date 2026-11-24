@@ -366,23 +366,6 @@ function createResultElement(result, { showIGBadge = false } = {}) {
   link.href = result.url;
   link.textContent = result.title;
 
-  const typeBadge = document.createElement("span");
-
-typeBadge.className =
-"search-result-type type-" + result.type;
-
-const typeNames = {
-profiles: "Profile",
-extensions: "Extension",
-examples: "Example",
-pages: "Documentation"
-};
-
-typeBadge.textContent =
-typeNames[result.type] || "Documentation";
-
-  title.appendChild(typeBadge);
-
   if (showIGBadge && result.igName) {
     const igBadge = document.createElement("span");
     igBadge.className = "search-result-ig";
